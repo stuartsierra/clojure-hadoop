@@ -1,6 +1,10 @@
-(ns clojure-hadoop.imports)
+(ns #^{:doc "Functions to import entire packages under org.apache.hadoop."}
+  clojure-hadoop.imports)
 
-(defn import-io []
+(defn import-io
+  "Imports all classes/interfaces/exceptions from the package
+  org.apache.hadoop.io into the current namespace."
+  []
   (import '(org.apache.hadoop.io RawComparator
 SequenceFile$Sorter$RawKeyValueIterator SequenceFile$ValueBytes
 Stringifier Writable WritableComparable WritableFactory
@@ -22,14 +26,20 @@ VLongWritable WritableComparator WritableFactories WritableName
 WritableUtils SequenceFile$CompressionType MultipleIOException
 VersionMismatchException)))
 
-(defn import-io-compress []
+(defn import-io-compress 
+  "Imports all classes/interfaces/exceptions from the package
+  org.apache.hadoop.io.compress into the current namespace."
+  []
   (import '(org.apache.hadoop.io.compress CompressionCodec Compressor
 Decompressor BlockCompressorStream BlockDecompressorStream CodecPool
 CompressionCodecFactory CompressionInputStream CompressionOutputStream
 CompressorStream DecompressorStream DefaultCodec GzipCodec
 GzipCodec$GzipInputStream GzipCodec$GzipOutputStream)))
 
-(defn import-fs []
+(defn import-fs 
+  "Imports all classes/interfaces/exceptions from the package
+  org.apache.hadoop.fs into the current namespace."
+  []
   (import '(org.apache.hadoop.fs PathFilter PositionedReadable
 Seekable Syncable BlockLocation BufferedFSInputStream
 ChecksumFileSystem ContentSummary DF DU FileStatus FileSystem
@@ -39,7 +49,10 @@ FSOutputSummer FsShell FsUrlStreamHandlerFactory HarFileSystem
 InMemoryFileSystem LocalDirAllocator LocalFileSystem Path
 RawLocalFileSystem Trash ChecksumException FSError)))
 
-(defn import-mapred []
+(defn import-mapred 
+  "Imports all classes/interfaces/exceptions from the package
+  org.apache.hadoop.mapred into the current namespace."
+  []
   (import '(org.apache.hadoop.mapred InputFormat InputSplit
 JobConfigurable JobHistory$Listener Mapper MapRunnable OutputCollector
 OutputFormat Partitioner RawKeyValueIterator RecordReader RecordWriter
@@ -71,7 +84,10 @@ TaskCompletionEvent$Status TaskLog$LogName FileAlreadyExistsException
 InvalidFileTypeException InvalidInputException InvalidJobConfException
 JobTracker$IllegalStateException)))
 
-(defn import-mapred-lib []
+(defn import-mapred-lib 
+  "Imports all classes/interfaces/exceptions from the package
+  org.apache.hadoop.mapred.lib into the current namespace."
+  []
   (import '(org.apache.hadoop.mapred.lib FieldSelectionMapReduce
 HashPartitioner IdentityMapper IdentityReducer InverseMapper
 KeyFieldBasedPartitioner LongSumReducer MultipleOutputFormat
