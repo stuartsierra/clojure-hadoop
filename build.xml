@@ -34,6 +34,7 @@
       <sysproperty key="clojure.compile.path" value="${dir.classes}"/>
       <classpath refid="class.path"/>
       <arg value="wordcount1"/>
+      <arg value="wordcount2"/>
     </java>
   </target>
 
