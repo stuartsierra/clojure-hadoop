@@ -96,13 +96,3 @@ MultithreadedMapRunner NLineInputFormat NullOutputFormat RegexMapper
 TokenCountMapper)))
 
 
-(defn import-util []
-  (import '(org.apache.hadoop.util IndexedSortable IndexedSorter
-Progressable Tool CyclicIteration Daemon DiskChecker
-GenericOptionsParser GenericsUtil HeapSort HostsFileReader MergeSort
-NativeCodeLoader PlatformName PrintJarMainClass PriorityQueue
-ProgramDriver Progress QuickSort ReflectionUtils RunJar ServletUtil
-Shell Shell$ShellCommandExecutor StringUtils ToolRunner VersionInfo
-XMLUtils DiskChecker$DiskErrorException
-DiskChecker$DiskOutOfSpaceException Shell$ExitCodeException)))
-
