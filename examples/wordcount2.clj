@@ -29,7 +29,7 @@
     (.setReducerClass (Class/forName "wordcount2_reducer"))
     (.setInputFormat TextInputFormat)
     (.setOutputFormat TextOutputFormat)
-    (FileInputFormat/setInputPaths (apply str (first args)))
+    (FileInputFormat/setInputPaths (first args))
     (FileOutputFormat/setOutputPath (Path. (second args)))
     (JobClient/runJob))
   0)
