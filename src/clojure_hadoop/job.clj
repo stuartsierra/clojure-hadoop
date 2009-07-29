@@ -1,6 +1,7 @@
 (ns clojure-hadoop.job
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp]
+            [clojure-hadoop.wrap :as wrap]
             [clojure-hadoop.config :as config]))
 
 (imp/import-io)
@@ -13,9 +14,13 @@
 
 (def *jobconf* nil)
 
-(def #^{:private true} function-name
+(def #^{:private true} method-fn-name
      {"map" "mapper-map"
       "reduce" "reducer-reduce"})
+
+(def #^{:private true} wrapper-fn
+     {"map" wrap/wrap-map
+      "reduce" wrap/wrap-reduce})
 
 (defn configure-functions
   "Preps the mapper or reducer with a Clojure function read from the
@@ -30,8 +35,8 @@
     (let [function (deref (resolve (symbol ns-name fn-name)))]
       (assert (fn? function))
       (alter-var-root (ns-resolve (the-ns 'clojure-hadoop.job)
-                                  (symbol (function-name type)))
-                      (fn [_] function)))))
+                                  (symbol (method-fn-name type)))
+                      (fn [_] ((wrapper-fn type) function))))))
 
 ;;; MAPPER
 
@@ -51,6 +56,14 @@
 
 ;;; TOOL 
 
+(defn parse-command-line [jobconf args]
+  (try
+   (config/parse-args jobconf args)
+   (catch Exception e
+     (println (.getMessage e))
+     (config/print-usage)
+     (System/exit 1))))
+
 (defn tool-run [this args]
   (doto (JobConf. (.getConf this) (.getClass this))
     (.setJobName "clojure_hadoop.job")
@@ -63,7 +76,7 @@
     (FileOutputFormat/setCompressOutput true)
     (SequenceFileOutputFormat/setOutputCompressionType
      SequenceFile$CompressionType/BLOCK)
-    (config/parse-args args)
+    (parse-command-line args)
     (config/handle-replace-option)
     (JobClient/runJob))
   0)
