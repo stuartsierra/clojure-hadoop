@@ -16,7 +16,7 @@
 
 (defmethod conf "-replace" [jobconf key value]
   (when (= value "true")
-    (.set jobconf "clojure-hadoop.config.replace" "true")))
+    (.set jobconf "clojure-hadoop.job.replace" "true")))
 
 (defmethod conf "-map" [jobconf key value]
   (cond
@@ -90,10 +90,7 @@ Reducer function may also be \"none\".
 
 Other available options are:
  -name          job name
- -replace       if followed by \"true\", overwrites output
+ -replace       if \"true\", deletes output dir before start
 ")
   (System/exit 0))
 
-(defn handle-replace-option [jobconf]
-  (when (= "true" (.get jobconf "clojure-hadoop.config.replace"))
-    nil))

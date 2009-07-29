@@ -64,6 +64,12 @@
      (config/print-usage)
      (System/exit 1))))
 
+(defn handle-replace-option [jobconf]
+  (when (= "true" (.get jobconf "clojure-hadoop.job.replace"))
+    (let [fs (FileSystem/get jobconf)
+          output (FileOutputFormat/getOutputPath jobconf)]
+      (.delete fs output true))))
+
 (defn tool-run [this args]
   (doto (JobConf. (.getConf this) (.getClass this))
     (.setJobName "clojure_hadoop.job")
@@ -77,6 +83,6 @@
     (SequenceFileOutputFormat/setOutputCompressionType
      SequenceFile$CompressionType/BLOCK)
     (parse-command-line args)
-    (config/handle-replace-option)
+    (handle-replace-option)
     (JobClient/runJob))
   0)
