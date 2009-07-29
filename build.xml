@@ -36,6 +36,7 @@
       <arg value="clojure-hadoop.job"/>
       <arg value="wordcount1"/>
       <arg value="wordcount2"/>
+      <arg value="wordcount3"/>
     </java>
   </target>
 
