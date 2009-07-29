@@ -37,9 +37,9 @@ and selecting a mirror close to you.
 
 
 
-COMPILING (OPTIONAL)
+COMPILING (optional for layers 1-3, required for layer 4)
 
-1. Create a "lib" directory in the same directory as this file and
+1. Create a "lib" directory (in the same directory as this README) and
 copy the JARs listed above into it.
 
 2. Run "ant"
@@ -48,16 +48,30 @@ copy the JARs listed above into it.
 
 USING THE LIBRARY
 
-This library includes the following 3 namespaces:
+This library provides different layers of abstraction away from the
+raw Hadoop API.
 
-clojure-hadoop.imports: provides convenience functions for importing
-the many classes and interfaces in the Hadoop API.
+Layer 1: clojure-hadoop.imports
 
-clojure-hadoop.gen: provides gen-class macros to generate the multiple
-classes needed for a MapReduce job.  See the file
-"examples/wordcount1.clj" for a demonstration of these macros.
+    Provides convenience functions for importing the many classes and
+    interfaces in the Hadoop API.
 
-clojure-hadoop.wrap: provides wrapper functions that automatically
-convert between Hadoop Text objects and Clojure data structures.  See
-the file "examples/wordcount2.clj" for a demonstration of these
-wrappers.
+Layer 2: clojure-hadoop.gen
+
+    Provides gen-class macros to generate the multiple classes needed
+    for a MapReduce job.  See the file "examples/wordcount1.clj" for a
+    demonstration of these macros.
+
+Layer 3: clojure-hadoop.wrap
+
+    clojure-hadoop.wrap: provides wrapper functions that automatically
+    convert between Hadoop Text objects and Clojure data structures.
+    See the file "examples/wordcount2.clj" for a demonstration of
+    these wrappers.
+
+Layer 4: clojure-hadoop.job
+
+    Provides a complete implementation of a Hadoop MapReduce job that
+    can be dynamically configured to use any Clojure functions in the
+    map and reduce phases.  See the file "examples/wordcount3.clj" for
+    a demonstration of this usage.
