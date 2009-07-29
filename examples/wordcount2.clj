@@ -28,8 +28,8 @@
   the results to out2/part-00000
 
   Notice that, in the output file, the words are enclosed in double
-  quotation marks.  That's because they are being printed as strings
-  by Clojure, as with 'pr'."}
+  quotation marks.  That's because they are being printed as readable
+  strings by Clojure, as with 'pr'."}
   wordcount2
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp]
