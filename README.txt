@@ -21,8 +21,10 @@ other, from this software.
 
 DEPENDENCIES
 
-In order to compile and run this code, you will need the following JAR
-files in your classpath:
+This library requires Java 6.
+
+In order to compile and use this library, you will need the following
+JAR files in your classpath:
 
  1. clojure.jar
  2. hadoop-0.18.3-core.jar
