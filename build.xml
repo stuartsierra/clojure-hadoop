@@ -1,9 +1,9 @@
 <project name="clojure_hadoop" default="build" basedir=".">
 
-  <property name="dir.src" location="${basedir}/src"/>
-  <property name="dir.test" location="${basedir}/test"/>
-  <property name="dir.examples" location="${basedir}/examples"/>
-  <property name="dir.classes" location="${basedir}/classes"/>
+  <property name="dir.src" location="${basedir}/src/main/clojure"/>
+  <property name="dir.test" location="${basedir}/src/test/clojure"/>
+  <property name="dir.examples" location="${basedir}/src/examples/clojure"/>
+  <property name="dir.classes" location="${basedir}/target/classes"/>
 
   <path id="class.path">
     <fileset dir="${basedir}/lib">
