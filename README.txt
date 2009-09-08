@@ -21,31 +21,33 @@ other, from this software.
 
 DEPENDENCIES
 
-This library requires Java 6.
-
-In order to compile and use this library, you will need the following
-JAR files in your classpath:
-
- 1. clojure.jar
- 2. hadoop-0.18.3-core.jar
- 3. Dependent JARs included with Hadoop (such as commons-logging)
-
-This code was developed with Hadoop MapReduce 0.18.3, although it
-should work with any later version.
-
-You can download the Hadoop distribution by visiting this web page:
-http://www.apache.org/dyn/closer.cgi/hadoop/core/hadoop-0.18.3/
-and selecting a mirror close to you.
+This library requires:
+1. Java 6 JDK, http://java.sun.com/
+2. Apache Maven 2, http://maven.apache.org/
 
 
+INSTALLING
 
-COMPILING (optional for layers 1-3, required for layer 4)
+In the top-level directory of this project, run:
 
-1. Create a "lib" directory (in the same directory as this README) and
-copy the JARs listed above into it.
+    mvn install
 
-2. Run "ant"
+This installs the clojure-hadoop JAR in your local Maven 2 repository.
 
+You can depend on clojure-hadoop in your Maven 2 projects by adding
+the following lines to your pom.xml:
+
+    <dependencies>
+      ...
+
+      <dependency>
+        <groupId>com.stuartsierra</groupId>
+        <artifactId>clojure-hadoop</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+
+      ...
+    </dependencies>
 
 
 USING THE LIBRARY
