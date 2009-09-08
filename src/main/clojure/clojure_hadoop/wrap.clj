@@ -1,6 +1,6 @@
-(ns #^{:doc "Map/Reduce wrappers that set up common input/output
-  conversions for Clojure jobs."}
-  clojure-hadoop.wrap
+(ns clojure-hadoop.wrap
+;;#^{:doc "Map/Reduce wrappers that set up common input/output
+  ;;conversions for Clojure jobs."}
   (:require [clojure-hadoop.imports :as imp]))
 
 (imp/import-io)

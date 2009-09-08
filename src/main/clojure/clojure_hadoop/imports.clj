@@ -1,5 +1,6 @@
-(ns #^{:doc "Functions to import entire packages under org.apache.hadoop."}
-  clojure-hadoop.imports)
+(ns clojure-hadoop.imports
+;;#^{:doc "Functions to import entire packages under org.apache.hadoop."}
+)
 
 (defn import-io
   "Imports all classes/interfaces/exceptions from the package
