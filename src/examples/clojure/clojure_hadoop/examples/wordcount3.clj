@@ -46,7 +46,7 @@
 ;; src/clojure_hadoop/config.clj for more configuration options.
   
 
-(ns wordcount3)
+(ns clojure-hadoop.examples.wordcount3)
 
 (defn my-reduce [key values]
   [[key (reduce + values)]])

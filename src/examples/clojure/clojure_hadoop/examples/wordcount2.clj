@@ -32,7 +32,7 @@
 ;; strings by Clojure, as with 'pr'.
 
 
-(ns wordcount2
+(ns clojure-hadoop.examples.wordcount2
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp]
             [clojure-hadoop.wrap :as wrap])

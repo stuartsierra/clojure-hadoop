@@ -19,7 +19,7 @@
 ;; the results to out1/part-00000
  
   
-(ns wordcount1
+(ns clojure-hadoop.examples.wordcount1
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp])
   (:import (java.util StringTokenizer)))
