@@ -1,36 +1,38 @@
-(ns #^{:doc "wordcount2 -- wrapped MapReduce example
+;; wordcount2 -- wrapped MapReduce example
+;;
+;; This namespace demonstrates how to use the function wrappers
+;; provided by the clojure-hadoop library.
+;;
+;; As in the wordcount1 example, we have to call gen-job-classes and
+;; gen-main-method, then define the three functions mapper-map,
+;; reducer-reduce, and tool-run.
+;;
+;; Here, mapper-map is identical to wordcount1, with the exception that
+;; we output keys and values as strings created with pr-str.
+;;
+;; But reducer-reduce uses the wrap-reduce function.  This allows us to
+;; write our reducer as a simple, pure-Clojure function.  Converting
+;; between Hadoop types, and dealing with the Hadoop APIs, are handled
+;; by the wrapper.
+;;
+;; The wrappers expect to work with Text values that can be read by the
+;; Clojure reader.  That's why the mapper function cannot be wrapped:
+;; it is reading a plain text file, not Clojure data structures.
+;;
+;; To run this example, first compile it (see instructions in
+;; README.txt), then run this command:
+;;
+;;   java -cp examples.jar:lib/* wordcount2 README.txt out2
+;;
+;; This will count the instances of each word in README.txt and write
+;; the results to out2/part-00000
+;;
+;; Notice that, in the output file, the words are enclosed in double
+;; quotation marks.  That's because they are being printed as readable
+;; strings by Clojure, as with 'pr'.
 
-  This namespace demonstrates how to use the function wrappers
-  provided by the clojure-hadoop library.
 
-  As in the wordcount1 example, we have to call gen-job-classes and
-  gen-main-method, then define the three functions mapper-map,
-  reducer-reduce, and tool-run.
-
-  Here, mapper-map is identical to wordcount1, with the exception that
-  we output keys and values as strings created with pr-str.
-
-  But reducer-reduce uses the wrap-reduce function.  This allows us to
-  write our reducer as a simple, pure-Clojure function.  Converting
-  between Hadoop types, and dealing with the Hadoop APIs, are handled
-  by the wrapper.
-
-  The wrappers expect to work with Text values that can be read by the
-  Clojure reader.  That's why the mapper function cannot be wrapped:
-  it is reading a plain text file, not Clojure data structures.
-
-  To run this example, first compile it (see instructions in
-  README.txt), then run this command:
-
-    java -cp examples.jar:lib/* wordcount2 README.txt out2
-
-  This will count the instances of each word in README.txt and write
-  the results to out2/part-00000
-
-  Notice that, in the output file, the words are enclosed in double
-  quotation marks.  That's because they are being printed as readable
-  strings by Clojure, as with 'pr'."}
-  wordcount2
+(ns wordcount2
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp]
             [clojure-hadoop.wrap :as wrap])

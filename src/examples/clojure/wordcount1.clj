@@ -1,24 +1,25 @@
-(ns #^{:doc "wordcount1 -- low-level MapReduce example
-
-  This namespace demonstrates how to use the lower layers of
-  abstraction provided by the clojure-hadoop library.
-
-  This is the example word count program used in the Hadoop MapReduce
-  tutorials.  As you can see, it is very similar to the Java code, and
-  uses the Hadoop API directly.
-
-  We have to call gen-job-classes and gen-main-method, then define the
-  three functions mapper-map, reducer-reduce, and tool-run.
-
-  To run this example, first compile it (see instructions in
-  README.txt), then run this command:
-
-    java -cp examples.jar:lib/* wordcount1 README.txt out1
-
-  This will count the instances of each word in README.txt and write
-  the results to out1/part-00000
-  "}
-  wordcount1
+;; wordcount1 -- low-level MapReduce example
+;;
+;; This namespace demonstrates how to use the lower layers of
+;; abstraction provided by the clojure-hadoop library.
+;;
+;; This is the example word count program used in the Hadoop MapReduce
+;; tutorials.  As you can see, it is very similar to the Java code, and
+;; uses the Hadoop API directly.
+;;
+;; We have to call gen-job-classes and gen-main-method, then define the
+;; three functions mapper-map, reducer-reduce, and tool-run.
+;;
+;; To run this example, first compile it (see instructions in
+;; README.txt), then run this command:
+;;
+;;   java -cp examples.jar:lib/* wordcount1 README.txt out1
+;;
+;; This will count the instances of each word in README.txt and write
+;; the results to out1/part-00000
+ 
+  
+(ns wordcount1
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp])
   (:import (java.util StringTokenizer)))
