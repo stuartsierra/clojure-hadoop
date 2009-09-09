@@ -26,6 +26,7 @@ This library requires:
 2. Apache Maven 2, http://maven.apache.org/
 
 
+
 INSTALLING
 
 In the top-level directory of this project, run:
@@ -33,6 +34,22 @@ In the top-level directory of this project, run:
     mvn install
 
 This installs the clojure-hadoop JAR in your local Maven 2 repository.
+Then run:
+
+    mvn assembly:assembly
+
+This builds alternate JAR files, with dependencies included, for
+running the examples.
+
+
+
+RUNNING THE EXAMPLES
+
+... to be written ...
+
+
+
+DEPENDING ON THE LIBRARY
 
 You can depend on clojure-hadoop in your Maven 2 projects by adding
 the following lines to your pom.xml:
@@ -48,6 +65,7 @@ the following lines to your pom.xml:
 
       ...
     </dependencies>
+
 
 
 USING THE LIBRARY
