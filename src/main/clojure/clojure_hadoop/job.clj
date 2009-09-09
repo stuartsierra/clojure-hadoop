@@ -60,7 +60,7 @@
   (try
    (config/parse-args jobconf args)
    (catch Exception e
-     (println (.getMessage e))
+     (prn e)
      (config/print-usage)
      (System/exit 1))))
 
