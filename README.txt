@@ -39,13 +39,30 @@ Then run:
     mvn assembly:assembly
 
 This builds alternate JAR files, with dependencies included, for
-running the examples.
+running the examples.  You can find these files in the "target"
+directory:
+
+    clojure-hadoop-1.0-SNAPSHOT-examples.jar
+        This JAR contains all dependencies, including all of Hadoop
+        0.18.3.  You can use this JAR to run the examples MapReduce
+        jobs from the command line.
+
+    clojure-hadoop-1.0-SNAPSHOT-job.jar
+        This JAR contains only this library and Clojure 1.0.  It is
+        suitable for inclusion in the "lib" directory of a JAR file
+        submitted as a Hadoop job.
 
 
 
 RUNNING THE EXAMPLES
 
-... to be written ...
+After running "mvn assembly:assembly", copy the file from
+
+    target/clojure-hadoop-1.0-SNAPSHOT-examples.jar
+
+to something short, like "examples.jar".  Each of the *.clj files in
+the src/examples directory contains instructions for running that
+example.
 
 
 
