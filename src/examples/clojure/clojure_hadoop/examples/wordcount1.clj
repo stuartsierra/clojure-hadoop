@@ -11,9 +11,11 @@
 ;; three functions mapper-map, reducer-reduce, and tool-run.
 ;;
 ;; To run this example, first compile it (see instructions in
-;; README.txt), then run this command:
+;; README.txt), then run this command (all one line):
 ;;
-;;   java -cp examples.jar:lib/* wordcount1 README.txt out1
+;;   java -cp examples.jar \
+;;        clojure_hadoop.examples.wordcount1 \
+;;        README.txt out1
 ;;
 ;; This will count the instances of each word in README.txt and write
 ;; the results to out1/part-00000

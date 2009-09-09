@@ -20,9 +20,11 @@
 ;; it is reading a plain text file, not Clojure data structures.
 ;;
 ;; To run this example, first compile it (see instructions in
-;; README.txt), then run this command:
+;; README.txt), then run this command (all one line):
 ;;
-;;   java -cp examples.jar:lib/* wordcount2 README.txt out2
+;;   java -cp examples.jar \
+;;        clojure_hadoop.examples.wordcount2 \
+;;        README.txt out2
 ;;
 ;; This will count the instances of each word in README.txt and write
 ;; the results to out2/part-00000

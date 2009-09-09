@@ -11,11 +11,11 @@
 ;; After compiling (see README.txt), run the example like this
 ;; (all on one line):
 ;;
-;;   java -cp examples.jar:lib/* clojure_hadoop.job 
-;;        -input README.txt 
-;;        -output out3
-;;        -map wordcount2_mapper 
-;;        -reduce wordcount3/my-reduce 
+;;   java -cp examples.jar clojure_hadoop.job \
+;;        -input README.txt \
+;;        -output out3 \
+;;        -map clojure_hadoop.examples.wordcount2_mapper \
+;;        -reduce clojure-hadoop.examples.wordcount3/my-reduce \
 ;;        -inputformat text
 ;;
 ;; The output is a Hadoop SequenceFile.  You can view the output
