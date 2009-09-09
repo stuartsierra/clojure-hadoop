@@ -91,6 +91,5 @@ Reducer function may also be \"none\".
 Other available options are:
  -name          job name
  -replace       if \"true\", deletes output dir before start
-")
-  (System/exit 0))
+"))
 
