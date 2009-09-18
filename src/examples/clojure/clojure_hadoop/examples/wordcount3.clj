@@ -14,7 +14,7 @@
 ;;   java -cp examples.jar clojure_hadoop.job \
 ;;        -input README.txt \
 ;;        -output out3 \
-;;        -map clojure_hadoop.examples.wordcount2_mapper \
+;;        -map clojure-hadoop.examples.wordcount3/my-map \
 ;;        -reduce clojure-hadoop.examples.wordcount3/my-reduce \
 ;;        -inputformat text
 ;;
@@ -46,7 +46,12 @@
 ;; src/clojure_hadoop/config.clj for more configuration options.
   
 
-(ns clojure-hadoop.examples.wordcount3)
+(ns clojure-hadoop.examples.wordcount3
+  (:import (java.util StringTokenizer)))
+
+(defn my-map [key value]
+  (map (fn [token] [token 1])
+       (enumeration-seq (StringTokenizer. value))))
 
 (defn my-reduce [key values]
   [[key (reduce + values)]])
