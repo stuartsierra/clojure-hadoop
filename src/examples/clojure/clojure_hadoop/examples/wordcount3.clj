@@ -1,7 +1,7 @@
 ;; wordcount3 -- example for use with clojure-hadoop.job
 ;;
-;; This example wordcount program is very different from the first two.
-;; As you can see, it defines only one function, doesn't import
+;; This example wordcount program is very different from the first
+;; two.  As you can see, it defines only two functions, doesn't import
 ;; anything, and doesn't generate any classes.
 ;;
 ;; This example is designed to be run with the clojure-hadoop.job
