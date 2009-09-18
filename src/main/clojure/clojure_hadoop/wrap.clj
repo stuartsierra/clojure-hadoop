@@ -1,5 +1,5 @@
 (ns clojure-hadoop.wrap
-;;#^{:doc "Map/Reduce wrappers that set up common input/output
+  ;;#^{:doc "Map/Reduce wrappers that set up common input/output
   ;;conversions for Clojure jobs."}
   (:require [clojure-hadoop.imports :as imp]))
 
@@ -8,46 +8,76 @@
 
 (declare *reporter*)
 
+(defn clojure-map-reader
+  "Returns a [key value] pair by calling read-string on the string
+  representations of the Writable key and value."
+  [wkey wvalue]
+  [(read-string (.toString wkey)) (read-string (.toString wvalue))])
+
+(defn clojure-reduce-reader
+  "Returns a [key seq-of-values] pair by calling read-string on the
+  string representations of the Writable key and values."
+  [wkey wvalues]
+  [(read-string (.toString wkey))
+   (map #(read-string (.toString %)) (iterator-seq wvalues))])
+
+(defn clojure-writer
+  "Sends key and value to the OutputCollector by calling pr-str on key
+  and value and wrapping them in Hadoop Text objects."
+  [output key value]
+  (binding [*print-dup* true]
+    (.collect output (Text. (pr-str key)) (Text. (pr-str value)))))
+
 (defn wrap-map
   "Returns a function implementing the Mapper.map interface.
 
-  The returned function uses read-string to read in Clojure data
-  structures from the key and value (which must be of type
-  org.apache.hadoop.io.Text).  Then it calls (f key value).
+  f is a function of two arguments, key and value.
 
   f must return a *sequence* of *pairs* like 
     [[key1 value1] [key2 value2] ...]
 
-  The pairs returned by f will be serialized to strings with pr-str,
-  then sent to the Hadoop OutputCollector as Text objects.
+  When f is called, *reporter* is bound to the Hadoop Reporter.
 
-  When f is called, *reporter* is bound to the Hadoop Reporter."
-  [f]
-  (fn [this wkey wvalue output reporter]
-    (binding [*reporter* reporter]
-      (doseq [[key value] (f (read-string (.toString wkey))
-                             (read-string (.toString wvalue)))]
-        (binding [*print-dup* true]
-          (.collect output (Text. (pr-str key)) (Text. (pr-str value))))))))
+  reader is a function that receives the Writable key and value from
+  Hadoop and returns a [key value] pair for f.
+
+  writer is a function that receives each [key value] pair returned by
+  f and sends the appropriately-type arguments to the Hadoop
+  OutputCollector.
+
+  If not given, reader and writer default to clojure-map-reader and
+  clojure-writer, respectively."
+  ([f] (wrap-map clojure-map-reader clojure-writer))
+  ([f reader] (wrap-map reader clojure-writer))
+  ([f reader writer]
+     (fn [this wkey wvalue output reporter]
+       (binding [*reporter* reporter]
+         (doseq [pair (apply f (reader wkey wvalue))]
+           (apply writer output pair))))))
 
 (defn wrap-reduce
   "Returns a function implementing the Reducer.reduce interface.
 
-  The returned function uses read-string to read in Clojure data
-  structures from the key and values (which must be of type
-  org.apache.hadoop.io.Text).  Then it calls (f key values).
+  f is a function of two arguments, key and sequence-of-values.
 
   f must return a *sequence* of *pairs* like 
     [[key1 value1] [key2 value2] ...]
 
-  The pairs returned by f will be serialized to strings with pr-str,
-  then sent to the Hadoop OutputCollector as Text objects.
+  When f is called, *reporter* is bound to the Hadoop Reporter.
 
-  When f is called, *reporter* is bound to the Hadoop Reporter."
-  [f]
-  (fn [this wkey wvalues output reporter]
-    (binding [*reporter* reporter]
-      (doseq [[key value] (f (read-string (.toString wkey))
-                             (map #(read-string (.toString %)) (iterator-seq wvalues)))]
-        (binding [*print-dup* true]
-          (.collect output (Text. (pr-str key)) (Text. (pr-str value))))))))
+  reader is a function that receives the Writable key and value from
+  Hadoop and returns a [key seq-of-values] pair for f.
+
+  writer is a function that receives each [key value] pair returned by
+  f and sends the appropriately-type arguments to the Hadoop
+  OutputCollector.
+
+  If not given, reader and writer default to clojure-reduce-reader and
+  clojure-writer, respectively."
+  ([f] (wrap-reduce f clojure-reduce-reader clojure-writer))
+  ([f writer] (wrap-reduce f clojure-reduce-reader writer))
+  ([f reader writer]
+     (fn [this wkey wvalues output reporter]
+       (binding [*reporter* reporter]
+         (doseq [pair (apply f (reader wkey wvalues))]
+           (apply writer output pair))))))
