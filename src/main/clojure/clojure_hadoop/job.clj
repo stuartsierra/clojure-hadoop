@@ -83,8 +83,9 @@
 (defn- run
   "Runs a Hadoop job given the JobConf object."
   [jobconf]
-  (handle-replace-option)
-  (JobClient/runJob))
+  (doto jobconf
+    (handle-replace-option)
+    (JobClient/runJob)))
 
 
 ;;; MAPPER METHODS
@@ -109,6 +110,6 @@
   (doto (JobConf. (.getConf this) (.getClass this))
     (set-default-config)
     (parse-command-line args)
-    (run)
-    0))
+    (run))
+  0)
 
