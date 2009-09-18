@@ -7,17 +7,15 @@
 ;; gen-main-method, then define the three functions mapper-map,
 ;; reducer-reduce, and tool-run.
 ;;
-;; Here, mapper-map is identical to wordcount1, with the exception that
-;; we output keys and values as strings created with pr-str.
+;; mapper-map uses the wrap-map function.  This allows us to write our
+;; reducer as a simple, pure-Clojure function.  Converting between
+;; Hadoop types, and dealing with the Hadoop APIs, are handled by the
+;; wrapper.  We give it a function that returns a sequence of pairs,
+;; and a pre-defined reader that accepts a Hadoop [IntWritable, Text]
+;; pair.  The default writer function writes keys and values as Hadoop
+;; Text objects rendered with pr-str.
 ;;
-;; But reducer-reduce uses the wrap-reduce function.  This allows us to
-;; write our reducer as a simple, pure-Clojure function.  Converting
-;; between Hadoop types, and dealing with the Hadoop APIs, are handled
-;; by the wrapper.
-;;
-;; The wrappers expect to work with Text values that can be read by the
-;; Clojure reader.  That's why the mapper function cannot be wrapped:
-;; it is reading a plain text file, not Clojure data structures.
+;; reducer-reduce similarly uses the wrap-reduce function.  
 ;;
 ;; To run this example, first compile it (see instructions in
 ;; README.txt), then run this command (all one line):
@@ -40,16 +38,19 @@
             [clojure-hadoop.wrap :as wrap])
   (:import (java.util StringTokenizer)))
 
-(imp/import-io)     ;; for Text, IntWritable
+(imp/import-io)     ;; for Text
 (imp/import-fs)     ;; for Path
 (imp/import-mapred) ;; for JobConf, JobClient
 
 (gen/gen-job-classes)
 (gen/gen-main-method)
 
-(defn mapper-map [this key value output reporter]
-  (doseq [word (enumeration-seq (StringTokenizer. (str value)))]
-    (.collect output (Text. (pr-str word)) (Text. (pr-str 1)))))
+(def mapper-map
+     (wrap/wrap-map 
+      (fn [key value]
+        (map (fn [token] [token 1])
+             (enumeration-seq (StringTokenizer. value))))
+      wrap/int-string-map-reader))
 
 (def reducer-reduce
      (wrap/wrap-reduce
