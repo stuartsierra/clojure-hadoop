@@ -15,6 +15,7 @@
 ;;        -input README.txt \
 ;;        -output out3 \
 ;;        -map clojure-hadoop.examples.wordcount3/my-map \
+;;        -map-reader clojure-hadoop.wrap/int-string-map-reader \
 ;;        -reduce clojure-hadoop.examples.wordcount3/my-reduce \
 ;;        -inputformat text
 ;;
@@ -29,13 +30,13 @@
 ;; Mapper, and Reducer, which are dynamically configured on the command
 ;; line.
 ;;
-;; The argument to -map is a class name, in this case from wordcount2,
-;; so that class gets used as the Mapper implementation.
+;; The argument to -map is a namespace-qualified Clojure symbol.  It
+;; names the function that will be used as a mapper.  We need to
+;; specify the -map-reader function as well because we are not using
+;; the default reader (which read pr'd Clojure data structures).
 ;;
-;; The argument to -reduce is a namespace-qualified Clojure symbol.  It
-;; names the function defined below.  When the Reducer runs, it will
-;; use that function (wrapped with clojure-hadoop.wrap/wrap-reduce) as
-;; the Reducer.reduce implementation.
+;; The argument to -reduce is also a namespace-qualified Clojure
+;; symbol.
 ;;
 ;; We also have to specify the input and output paths, and specify the
 ;; non-default inputformat as 'text', because README.txt is a text
