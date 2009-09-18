@@ -56,8 +56,8 @@
 
   If not given, reader and writer default to clojure-map-reader and
   clojure-writer, respectively."
-  ([f] (wrap-map clojure-map-reader clojure-writer))
-  ([f reader] (wrap-map reader clojure-writer))
+  ([f] (wrap-map f clojure-map-reader clojure-writer))
+  ([f reader] (wrap-map f reader clojure-writer))
   ([f reader writer]
      (fn [this wkey wvalue output reporter]
        (binding [*reporter* reporter]
