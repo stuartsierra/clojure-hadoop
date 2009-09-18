@@ -6,68 +6,89 @@
 (imp/import-mapred)
 (imp/import-mapred-lib)
 
+(defn- as-str [s]
+  (cond (keyword? s) (name s)
+        (class? s) (.getName s)
+        (fn? s) (throw (Exception. "Cannot use function as value; use a symbol."))
+        :else (str s)))
+
 (defmulti conf (fn [jobconf key value] key))
 
-(defmethod conf "-input" [jobconf key value]
-  (FileInputFormat/setInputPaths jobconf value))
+(defmethod conf :input [jobconf key value]
+  (FileInputFormat/setInputPaths jobconf (as-str value)))
 
-(defmethod conf "-output" [jobconf key value]
-  (FileOutputFormat/setOutputPath jobconf (Path. value)))
+(defmethod conf :output [jobconf key value]
+  (FileOutputFormat/setOutputPath jobconf (Path. (as-str value))))
 
-(defmethod conf "-replace" [jobconf key value]
-  (when (= value "true")
+(defmethod conf :replace [jobconf key value]
+  (when (= (as-str value) "true")
     (.set jobconf "clojure-hadoop.job.replace" "true")))
 
-(defmethod conf "-map" [jobconf key value]
-  (cond
-   (= "identity" (.toLowerCase value))
-   (.setMapperClass jobconf IdentityMapper)
+(defmethod conf :map [jobconf key value]
+  (let [value (as-str value)]
+    (cond
+      (= "identity" value)
+      (.setMapperClass jobconf IdentityMapper)
 
-   (.contains value "/")
-   (.set jobconf "clojure-hadoop.job.map" value)
+      (.contains value "/")
+      (.set jobconf "clojure-hadoop.job.map" value)
 
-   :else
-   (.setMapperClass jobconf (Class/forName value))))
+      :else
+      (.setMapperClass jobconf (Class/forName value)))))
 
-(defmethod conf "-reduce" [jobconf key value]
-  (cond
-   (= "identity" (.toLowerCase value))
-   (.setReducerClass jobconf IdentityReducer)
+(defmethod conf :reduce [jobconf key value]
+  (let [value (as-str value)]
+    (cond
+      (= "identity" value)
+      (.setReducerClass jobconf IdentityReducer)
 
-   (= "none" (.toLowerCase value))
-   (.setNumReduceTasks jobconf 0)
+      (= "none" value)
+      (.setNumReduceTasks jobconf 0)
 
-   (.contains value "/")
-   (.set jobconf "clojure-hadoop.job.reduce" value)
+      (.contains value "/")
+      (.set jobconf "clojure-hadoop.job.reduce" value)
 
-   :else
-   (.setReducerClass jobconf (Class/forName value))))
+      :else
+      (.setReducerClass jobconf (Class/forName value)))))
 
-(defmethod conf "-inputformat" [jobconf key value]
-  (prn key value)
-  (cond
-   (= "text" (.toLowerCase value))
-   (.setInputFormat jobconf TextInputFormat)
+(defmethod conf :map-reader [jobconf key value]
+  (.set jobconf "clojure-hadoop.job.map.reader" (as-str value)))
 
-   (= "kvtext" (.toLowerCase value))
-   (.setInputFormat jobconf KeyValueTextInputFormat)
+(defmethod conf :map-writer [jobconf key value]
+  (.set jobconf "clojure-hadoop.job.map.writer" (as-str value)))
 
-   (= "seq" (.toLowerCase value))
-   (.setInputFormat jobconf SequenceFileInputFormat)
+(defmethod conf :reduce-reader [jobconf key value]
+  (.set jobconf "clojure-hadoop.job.reduce.reader" (as-str value)))
 
-   :else
-   (.setInputFormat jobconf (Class/forName value))))
+(defmethod conf :reduce-writer [jobconf key value]
+  (.set jobconf "clojure-hadoop.job.reduce.writer" (as-str value)))
 
-(defmethod conf "-outputformat" [jobconf key value]
-  (cond
-   (= "text" (.toLowerCase value))
-   (.setOutputFormat jobconf TextOutputFormat)
+(defmethod conf :inputformat [jobconf key value]
+  (let [value (as-str value)]
+    (cond
+      (= "text" value)
+      (.setInputFormat jobconf TextInputFormat)
 
-   (= "seq" (.toLowerCase value))
-   (.setOutputFormat jobconf SequenceFileOutputFormat)
+      (= "kvtext" value)
+      (.setInputFormat jobconf KeyValueTextInputFormat)
 
-   :else
-   (.setOutputFormat jobconf (Class/forName value))))
+      (= "seq" value)
+      (.setInputFormat jobconf SequenceFileInputFormat)
+
+      :else
+      (.setInputFormat jobconf (Class/forName value)))))
+
+(defmethod conf :outputformat [jobconf key value]
+  (let [value (as-str value)]
+    (cond
+      (= "text" value)
+      (.setOutputFormat jobconf TextOutputFormat)
+
+      (= "seq" value)
+      (.setOutputFormat jobconf SequenceFileOutputFormat)
+
+      :else
+      (.setOutputFormat jobconf (Class/forName value)))))
 
 (defn parse-args [jobconf args]
   (when (empty? args)
@@ -75,7 +96,7 @@
   (when-not (even? (count args))
     (throw (Exception. "Number of options must be even.")))
   (doseq [[k v] (partition 2 args)]
-    (conf jobconf k v)))
+    (conf jobconf (keyword (subs k 1)) v)))
 
 (defn print-usage []
   (println "Usage: java -cp [jars...] clojure_hadoop.job [options...]
@@ -84,6 +105,11 @@ Required options are:
  -output    output path
  -map       mapper function, as namespace/name or class name
  -reduce    reducer function, as namespace/name or class name
+
+-map-reader    Mapper reader function, as namespace/name
+-map-writer    Mapper writer function, as namespace/name
+-reduce-reader Reducer reader function, as namespace/name
+-reduce-writer Reducer writer function, as namespace/name
 
 Mapper or reducer function may also be \"identity\".
 Reducer function may also be \"none\".
