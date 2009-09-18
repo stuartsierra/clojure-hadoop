@@ -80,12 +80,20 @@
     (SequenceFileOutputFormat/setOutputCompressionType
      SequenceFile$CompressionType/BLOCK)))
 
-(defn- run
+(defn run
   "Runs a Hadoop job given the JobConf object."
   [jobconf]
   (doto jobconf
     (handle-replace-option)
     (JobClient/runJob)))
+
+(defn job
+  "Creates a JobConf object, using parameters defined in
+  clojure-hadoop.config."
+  [& args]
+  (doto (JobConf. (Class/forName "clojure_hadoop.job"))
+    (set-default-config)
+    (config/parse-function-args args)))
 
 
 ;;; MAPPER METHODS
