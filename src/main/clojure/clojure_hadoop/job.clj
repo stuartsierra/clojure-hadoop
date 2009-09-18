@@ -23,8 +23,8 @@
       "reduce" wrap/wrap-reduce})
 
 (def #^{:private true} default-reader
-  {"map" wrap/clojure-map-reader
-   "reduce" wrap/clojure-reduce-reader})
+     {"map" wrap/clojure-map-reader
+      "reduce" wrap/clojure-reduce-reader})
 
 (defn- load-var [s]
   (let [[ns-name fn-name] (.split s "/")]
@@ -33,7 +33,7 @@
     (assert (find-ns (symbol ns-name)))
     (deref (resolve (symbol ns-name fn-name)))))
 
-(defn configure-functions
+(defn- configure-functions
   "Preps the mapper or reducer with a Clojure function read from the
   job configuration.  Called from Mapper.configure and
   Reducer.configure."
@@ -51,40 +51,24 @@
                                 (symbol (method-fn-name type)))
                     (fn [_] ((wrapper-fn type) function reader writer)))))
 
-;;; MAPPER
+;;; CREATING AND CONFIGURING JOBS
 
-(defn mapper-configure [this jobconf]
-  (configure-functions "map" jobconf))
-
-(defn mapper-map [this wkey wvalue output reporter]
-  (throw (Exception. "Mapper function not defined.")))
-
-;;; REDUCER
-
-(defn reducer-configure [this jobconf]
-  (configure-functions "reduce" jobconf))
-
-(defn reducer-reduce [this wkey wvalues output reporter]
-  (throw (Exception. "Reducer function not defined.")))
-
-;;; TOOL 
-
-(defn parse-command-line [jobconf args]
+(defn- parse-command-line [jobconf args]
   (try
-   (config/parse-args jobconf args)
+   (config/parse-command-line-args jobconf args)
    (catch Exception e
      (prn e)
      (config/print-usage)
      (System/exit 1))))
 
-(defn handle-replace-option [jobconf]
+(defn- handle-replace-option [jobconf]
   (when (= "true" (.get jobconf "clojure-hadoop.job.replace"))
     (let [fs (FileSystem/get jobconf)
           output (FileOutputFormat/getOutputPath jobconf)]
       (.delete fs output true))))
 
-(defn tool-run [this args]
-  (doto (JobConf. (.getConf this) (.getClass this))
+(defn- set-default-config [jobconf]
+  (doto jobconf
     (.setJobName "clojure_hadoop.job")
     (.setOutputKeyClass Text)
     (.setOutputValueClass Text)
@@ -94,8 +78,37 @@
     (.setOutputFormat SequenceFileOutputFormat)
     (FileOutputFormat/setCompressOutput true)
     (SequenceFileOutputFormat/setOutputCompressionType
-     SequenceFile$CompressionType/BLOCK)
+     SequenceFile$CompressionType/BLOCK)))
+
+(defn- run
+  "Runs a Hadoop job given the JobConf object."
+  [jobconf]
+  (handle-replace-option)
+  (JobClient/runJob))
+
+
+;;; MAPPER METHODS
+
+(defn mapper-configure [this jobconf]
+  (configure-functions "map" jobconf))
+
+(defn mapper-map [this wkey wvalue output reporter]
+  (throw (Exception. "Mapper function not defined.")))
+
+;;; REDUCER METHODS
+
+(defn reducer-configure [this jobconf]
+  (configure-functions "reduce" jobconf))
+
+(defn reducer-reduce [this wkey wvalues output reporter]
+  (throw (Exception. "Reducer function not defined.")))
+
+;;; TOOL METHODS
+
+(defn tool-run [this args]
+  (doto (JobConf. (.getConf this) (.getClass this))
+    (set-default-config)
     (parse-command-line args)
-    (handle-replace-option)
-    (JobClient/runJob))
-  0)
+    (run)
+    0))
+
