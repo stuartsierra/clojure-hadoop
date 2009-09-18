@@ -21,8 +21,8 @@
 ;; The output is a Hadoop SequenceFile.  You can view the output
 ;; with (all one line):
 ;;
-;;   java -cp examples.jar:lib/* org.apache.hadoop.fs.FsShell 
-;;        -text out/part-00000 
+;;   java -cp examples.jar org.apache.hadoop.fs.FsShell \
+;;        -text out3/part-00000 
 ;;
 ;; clojure_hadoop.job (note the underscore instead of a dash, because
 ;; we are calling it as a Java class) provides classes for Tool,
