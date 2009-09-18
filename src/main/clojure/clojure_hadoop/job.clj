@@ -39,7 +39,7 @@
   Reducer.configure."
   [type jobconf]
   (alter-var-root (var *jobconf*) (fn [_] jobconf))
-  (let [function (load-var (.get (str "clojure-hadoop.job." type)))
+  (let [function (load-var (.get jobconf (str "clojure-hadoop.job." type)))
         reader (if-let [v (.get jobconf (str "clojure-hadoop.job." type ".reader"))]
                  (load-var v)
                  (default-reader type))
