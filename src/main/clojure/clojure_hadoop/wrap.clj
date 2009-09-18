@@ -8,6 +8,15 @@
 
 (declare *reporter*)
 
+(defn string-map-reader
+  "Returns a [key value] pair by calling .toString on the Writable key
+  and value."
+  [wkey wvalue]
+  [(.toString wkey) (.toString wvalue)])
+
+(defn int-string-map-reader [wkey wvalue]
+  [(.get wkey) (.toString wvalue)])
+
 (defn clojure-map-reader
   "Returns a [key value] pair by calling read-string on the string
   representations of the Writable key and value."
