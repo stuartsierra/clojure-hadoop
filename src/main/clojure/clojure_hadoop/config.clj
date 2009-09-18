@@ -106,15 +106,14 @@ Required options are:
  -map       mapper function, as namespace/name or class name
  -reduce    reducer function, as namespace/name or class name
 
--map-reader    Mapper reader function, as namespace/name
--map-writer    Mapper writer function, as namespace/name
--reduce-reader Reducer reader function, as namespace/name
--reduce-writer Reducer writer function, as namespace/name
-
 Mapper or reducer function may also be \"identity\".
 Reducer function may also be \"none\".
 
 Other available options are:
+ -map-reader    Mapper reader function, as namespace/name
+ -map-writer    Mapper writer function, as namespace/name
+ -reduce-reader Reducer reader function, as namespace/name
+ -reduce-writer Reducer writer function, as namespace/name
  -name          job name
  -replace       if \"true\", deletes output dir before start
 "))
