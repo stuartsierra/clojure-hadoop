@@ -90,13 +90,21 @@
       :else
       (.setOutputFormat jobconf (Class/forName value)))))
 
-(defn parse-args [jobconf args]
+(defn parse-command-line-args [jobconf args]
   (when (empty? args)
     (throw (Exception. "Required options are -input, -output, -map, -reduce.")))
   (when-not (even? (count args))
     (throw (Exception. "Number of options must be even.")))
   (doseq [[k v] (partition 2 args)]
     (conf jobconf (keyword (subs k 1)) v)))
+
+(defn parse-function-args [jobconf args]
+  (when (empty? args)
+    (throw (Exception. "Required options are :input, :output, :map, :reduce.")))
+  (when-not (even? (count args))
+    (throw (Exception. "Number of options must be even.")))
+  (doseq [[k v] (partition 2 args)]
+    (conf jobconf k v)))
 
 (defn print-usage []
   (println "Usage: java -cp [jars...] clojure_hadoop.job [options...]
