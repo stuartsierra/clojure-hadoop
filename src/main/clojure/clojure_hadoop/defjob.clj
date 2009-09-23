@@ -1,7 +1,7 @@
 (ns clojure-hadoop.defjob
   (:require [clojure-hadoop.job :as job]))
 
-(defn full-name
+(defn- full-name
   "Returns the fully-qualified name for a symbol s, either a class or
   a var, resolved in the current namespace."
   [s]
@@ -18,13 +18,15 @@
 
   A job function may be given as the -job argument to
   clojure-hadoop.job to run a job."
-  [name & options]
-  (let [opts (apply hash-map options)
-        args (reduce (fn [r [k v]]
-                       (conj r (str \- (name k))
-                             (cond (string? v) v
-                                   (symbol? v) (full-name v)
-                                   (keyword? v) (name v)
-                                   :else (throw (Exception. "defjob arguments must be strings, symbols, or keywords")))))
-                     [] (dissoc opts :class-name))])
-  `(defn ~name [] ~args))
+  [sym & options]
+  (let [args (reduce (fn [m [k v]]
+                       (prn k)
+                       (prn v)
+                       (prn (name v))
+                       (assoc m k
+                              (cond (keyword? v) (name v)
+                                    (string? v) v
+                                    (symbol? v) (full-name v)
+                                    :else (throw (Exception. "defjob arguments must be strings, symbols, or keywords")))))
+                     {} (apply hash-map options))]
+    `(defn ~sym [] ~args)))
