@@ -36,6 +36,12 @@
 (defn my-reduce [key values]
   [[key (reduce + values)]])
 
+(defjob
+  :map my-map
+  :map-reader wrap/int-string-map-reader
+  :reduce my-reduce
+  :inputformat :text)
+
 (defn -main [& args]
   (job/tool-main
    "-input" (first args)
