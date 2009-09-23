@@ -1,21 +1,24 @@
 ;; wordcount4 -- example precompiled job
 ;;
-;; This example wordcount program is similar to wordcount3, but it is
-;; packaged in a generated class to simplify running from the command
-;; line.
+;; This example wordcount program is similar to wordcount3, but it
+;; includes a job definition function created with defjob.
 ;;
-;; The namespace declares :gen-class, which generates a class with a
-;; static main method.
+;; defjob parses its options to create a job configuration map
+;; suitable for clojure-hadoop.config.
 ;;
-;; The -main method definition just calls the main method of
-;; clojure-hadoop.job, passing in some pre-configured arguments.
+;; defjob defines an ordinary function, with the given name ("job" in
+;; this example), which returns the job configuration map.
+;;
+;; We can specify the job definition function on the command line to
+;; clojure_hadoop.job, adding or overriding any additional arguments
+;; at the command line.
 ;;
 ;; After compiling (see README.txt), run the example like this
 ;; (all on one line):
 ;;
-;;   java -cp examples.jar \
-;;        clojure_hadoop.examples.wordcount4 \
-;;        README.txt out4
+;;   java -cp examples.jar clojure_hadoop.job \
+;;        -job clojure-hadoop.examples.wordcount4/job \
+;;        -input README.txt -output out4
 ;;
 ;; The output is a Hadoop SequenceFile.  You can view the output
 ;; with (all one line):
