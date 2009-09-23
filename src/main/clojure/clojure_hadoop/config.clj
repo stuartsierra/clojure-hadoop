@@ -1,5 +1,6 @@
 (ns clojure-hadoop.config
-  (:require [clojure-hadoop.imports :as imp]))
+  (:require [clojure-hadoop.imports :as imp]
+            [clojure-hadoop.load :as load]))
 
 (imp/import-io)
 (imp/import-fs)
@@ -13,6 +14,11 @@
         :else (str s)))
 
 (defmulti conf (fn [jobconf key value] key))
+
+(defmethod conf :job [jobconf key value]
+  (let [f (load-name value)]
+    (doseq [[k v] (f)]
+      (conf jobconf k v))))
 
 (defmethod conf :input [jobconf key value]
   (FileInputFormat/setInputPaths jobconf (as-str value)))
@@ -98,12 +104,8 @@
   (doseq [[k v] (partition 2 args)]
     (conf jobconf (keyword (subs k 1)) v)))
 
-(defn parse-function-args [jobconf args]
-  (when (empty? args)
-    (throw (Exception. "Required options are :input, :output, :map, :reduce.")))
-  (when-not (even? (count args))
-    (throw (Exception. "Number of options must be even.")))
-  (doseq [[k v] (partition 2 args)]
+(defn parse-function-args [jobconf argmap]
+  (doseq [[k v] argmap]
     (conf jobconf k v)))
 
 (defn print-usage []
@@ -113,6 +115,8 @@ Required options are:
  -output    output path
  -map       mapper function, as namespace/name or class name
  -reduce    reducer function, as namespace/name or class name
+OR
+ -job       job definition function, as namespace/name
 
 Mapper or reducer function may also be \"identity\".
 Reducer function may also be \"none\".
