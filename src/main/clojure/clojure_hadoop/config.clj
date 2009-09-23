@@ -104,10 +104,6 @@
   (doseq [[k v] (partition 2 args)]
     (conf jobconf (keyword (subs k 1)) v)))
 
-(defn parse-function-args [jobconf argmap]
-  (doseq [[k v] argmap]
-    (conf jobconf k v)))
-
 (defn print-usage []
   (println "Usage: java -cp [jars...] clojure_hadoop.job [options...]
 Required options are:
