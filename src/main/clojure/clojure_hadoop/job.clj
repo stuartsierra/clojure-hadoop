@@ -81,14 +81,6 @@
     (handle-replace-option)
     (JobClient/runJob)))
 
-(defn job
-  "Creates a JobConf object, using parameters defined in
-  clojure-hadoop.config."
-  [& args]
-  (doto (JobConf. (Class/forName "clojure_hadoop.job"))
-    (set-default-config)
-    (config/parse-function-args args)))
-
 
 ;;; MAPPER METHODS
 
