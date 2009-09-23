@@ -26,7 +26,7 @@
 
 (ns clojure-hadoop.examples.wordcount4
   (:gen-class)
-  (:require [clojure-hadoop.job :as job])
+  (:require [clojure-hadoop.wrap :as wrap])
   (:import (java.util StringTokenizer)))
 
 (defn my-map [key value]
