@@ -16,7 +16,7 @@
 (defmulti conf (fn [jobconf key value] key))
 
 (defmethod conf :job [jobconf key value]
-  (let [f (load-name value)]
+  (let [f (load/load-name value)]
     (doseq [[k v] (f)]
       (conf jobconf k v))))
 
