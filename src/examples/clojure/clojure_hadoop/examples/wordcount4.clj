@@ -36,17 +36,9 @@
 (defn my-reduce [key values]
   [[key (reduce + values)]])
 
-(defjob
-  :map my-map
-  :map-reader wrap/int-string-map-reader
-  :reduce my-reduce
-  :inputformat :text)
+(defn job []
+  {:map my-map
+   :map-reader wrap/int-string-map-reader
+   :reduce my-reduce
+   :inputformat :text})
 
-(defn -main [& args]
-  (job/tool-main
-   "-input" (first args)
-   "-output" (second args)
-   "-map" "clojure-hadoop.examples.wordcount4/my-map"
-   "-map-reader" "clojure-hadoop.wrap/int-string-map-reader"
-   "-reduce" "clojure-hadoop.examples.wordcount4/my-reduce"
-   "-inputformat" "text"))
