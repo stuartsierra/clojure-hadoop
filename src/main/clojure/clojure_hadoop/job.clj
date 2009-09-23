@@ -2,7 +2,8 @@
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp]
             [clojure-hadoop.wrap :as wrap]
-            [clojure-hadoop.config :as config]))
+            [clojure-hadoop.config :as config]
+            [clojure-hadoop.load :as load]))
 
 (imp/import-io)
 (imp/import-io-compress)
@@ -26,25 +27,18 @@
      {"map" wrap/clojure-map-reader
       "reduce" wrap/clojure-reduce-reader})
 
-(defn- load-var [s]
-  (let [[ns-name fn-name] (.split s "/")]
-    (when-not (find-ns (symbol ns-name))
-      (require (symbol ns-name)))
-    (assert (find-ns (symbol ns-name)))
-    (deref (resolve (symbol ns-name fn-name)))))
-
 (defn- configure-functions
   "Preps the mapper or reducer with a Clojure function read from the
   job configuration.  Called from Mapper.configure and
   Reducer.configure."
   [type jobconf]
   (alter-var-root (var *jobconf*) (fn [_] jobconf))
-  (let [function (load-var (.get jobconf (str "clojure-hadoop.job." type)))
+  (let [function (load/load-name (.get jobconf (str "clojure-hadoop.job." type)))
         reader (if-let [v (.get jobconf (str "clojure-hadoop.job." type ".reader"))]
-                 (load-var v)
+                 (load/load-name v)
                  (default-reader type))
         writer (if-let [v (.get jobconf (str "clojure-hadoop.job." type ".writer"))]
-                 (load-var v)
+                 (load/load-name v)
                  wrap/clojure-writer)]
     (assert (fn? function))
     (alter-var-root (ns-resolve (the-ns 'clojure-hadoop.job)
