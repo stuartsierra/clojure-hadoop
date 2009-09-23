@@ -37,8 +37,8 @@
   [[key (reduce + values)]])
 
 (defn job []
-  {:map my-map
-   :map-reader wrap/int-string-map-reader
-   :reduce my-reduce
+  {:map `my-map
+   :map-reader `wrap/int-string-map-reader
+   :reduce `my-reduce
    :inputformat :text})
 
