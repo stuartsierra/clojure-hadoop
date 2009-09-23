@@ -20,9 +20,6 @@
   clojure-hadoop.job to run a job."
   [sym & options]
   (let [args (reduce (fn [m [k v]]
-                       (prn k)
-                       (prn v)
-                       (prn (name v))
                        (assoc m k
                               (cond (keyword? v) (name v)
                                     (string? v) v
