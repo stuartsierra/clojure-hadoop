@@ -26,7 +26,8 @@
 
 (ns clojure-hadoop.examples.wordcount4
   (:gen-class)
-  (:require [clojure-hadoop.wrap :as wrap])
+  (:require [clojure-hadoop.wrap :as wrap]
+            [clojure-hadoop.defjob :as defjob])
   (:import (java.util StringTokenizer)))
 
 (defn my-map [key value]
@@ -36,9 +37,9 @@
 (defn my-reduce [key values]
   [[key (reduce + values)]])
 
-(defn job []
-  {:map `my-map
-   :map-reader `wrap/int-string-map-reader
-   :reduce `my-reduce
-   :inputformat :text})
+(defjob/defjob job
+  :map my-map
+  :map-reader wrap/int-string-map-reader
+  :reduce my-reduce
+  :inputformat :text)
 
