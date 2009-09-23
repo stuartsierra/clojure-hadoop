@@ -13,22 +13,13 @@
     (throw (Exception. (str "Symbol not found: " s)))))
 
 (defmacro defjob
-  "Generates a job class for AOT-compilation.  The class has a main
-  function which calls clojure-hadoop.job/tool-main.
+  "Defines a job function. Options are the same those in
+  clojure-hadoop.config.
 
-  Options are the same those in clojure-hadoop.job/config.
-
-  One additional option, :class-name, specifies the name of the
-  generated class.  If not given, defaults to the name of the current
-  namespace.
-
-  You may use have multiple defjobs in a single namespace, as long as
-  they have different :class-names."
-  [& options]
+  A job function may be given as the -job argument to
+  clojure-hadoop.job to run a job."
+  [name & options]
   (let [opts (apply hash-map options)
-        class-name (or (str (:class-name opts))
-                       (.replace (name (ns-name *ns*)) \- \_))
-        prefix (str (gensym "defjob"))
         args (reduce (fn [r [k v]]
                        (conj r (str \- (name k))
                              (cond (string? v) v
@@ -36,7 +27,4 @@
                                    (keyword? v) (name v)
                                    :else (throw (Exception. "defjob arguments must be strings, symbols, or keywords")))))
                      [] (dissoc opts :class-name))])
-  `(do (gen-class :name ~class-name :prefix ~prefix :main true)
-       (intern *ns* (symbol (str prefix "-main"))
-               (fn [& args#]
-                 (job/tool-main (concat ~args args#))))))
+  `(defn ~name [] ~args))
