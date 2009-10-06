@@ -66,7 +66,15 @@ example.
 
 
 
-DEPENDING ON THE LIBRARY
+USING THE LIBRARY IN HADOOP
+
+Run "mvn assembly:assembly" in this project, then include the
+"clojure-hadoop-1.0-SNAPSHOT-job.jar" file in the lib/ directory of
+the JAR you submit as your Hadoop job.
+
+
+
+DEPENDING ON THE LIBRARY WITH MAVEN
 
 You can depend on clojure-hadoop in your Maven 2 projects by adding
 the following lines to your pom.xml:
