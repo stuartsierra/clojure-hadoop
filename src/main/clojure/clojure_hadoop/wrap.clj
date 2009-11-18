@@ -28,7 +28,7 @@
   string representations of the Writable key and values."
   [wkey wvalues]
   [(read-string (.toString wkey))
-   (map #(read-string (.toString %)) (iterator-seq wvalues))])
+   (fn [] (map #(read-string (.toString %)) (iterator-seq wvalues)))])
 
 (defn clojure-writer
   "Sends key and value to the OutputCollector by calling pr-str on key
