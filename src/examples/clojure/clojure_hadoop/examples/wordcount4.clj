@@ -37,8 +37,8 @@
   (map (fn [token] [token 1])
        (enumeration-seq (StringTokenizer. value))))
 
-(defn my-reduce [key values]
-  [[key (reduce + values)]])
+(defn my-reduce [key values-fn]
+  [[key (reduce + (values-fn))]])
 
 (defjob/defjob job
   :map my-map
