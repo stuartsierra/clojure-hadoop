@@ -8,6 +8,13 @@
 
 (declare *reporter*)
 
+(defn- non-caching-iterator-seq [#^java.util.Iterator iter]
+  (proxy [clojure.lang.ISeq] []
+    (seq [] this)
+    (first [] (when (.hasNext iter) (.next iter)))
+    (next [] (when (.hasNext iter) this))
+    (more [] (if (.hasNext iter) this (list)))))
+
 (defn string-map-reader
   "Returns a [key value] pair by calling .toString on the Writable key
   and value."
@@ -28,7 +35,7 @@
   string representations of the Writable key and values."
   [wkey wvalues]
   [(read-string (.toString wkey))
-   (map #(read-string (.toString %)) (iterator-seq wvalues))])
+   (map #(read-string (.toString %)) (non-caching-iterator-seq wvalues))])
 
 (defn clojure-writer
   "Sends key and value to the OutputCollector by calling pr-str on key
