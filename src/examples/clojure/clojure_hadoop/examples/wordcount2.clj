@@ -54,8 +54,8 @@
 
 (def reducer-reduce
      (wrap/wrap-reduce
-      (fn [key values]
-        [[key (reduce + values)]])))
+      (fn [key values-fn]
+        [[key (reduce + (values-fn))]])))
 
 (defn tool-run [this args]
   (doto (JobConf. (.getConf this) (.getClass this))
