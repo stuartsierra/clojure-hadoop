@@ -15,7 +15,13 @@
 ;; pair.  The default writer function writes keys and values as Hadoop
 ;; Text objects rendered with pr-str.
 ;;
-;; reducer-reduce similarly uses the wrap-reduce function.  
+;; reducer-reduce similarly uses the wrap-reduce function.  However,
+;; rather than passing the sequence of values directly to the
+;; function, wrap-reduce will pass a *function* that *returns* a lazy
+;; sequence of values.  Because this sequence may be very large, you
+;; must be careful never to bind it to a local variable.  Basically,
+;; you should only use the values-fn in one of Clojure's sequence
+;; functions such as map, filter, or reduce.
 ;;
 ;; To run this example, first compile it (see instructions in
 ;; README.txt), then run this command (all one line):
