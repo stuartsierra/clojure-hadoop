@@ -6,7 +6,7 @@
 (imp/import-io)
 (imp/import-mapred)
 
-(declare *reporter*)
+(declare #^Reporter *reporter*)
 
 (defn string-map-reader
   "Returns a [key value] pair by calling .toString on the Writable key
