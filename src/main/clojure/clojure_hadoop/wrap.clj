@@ -67,7 +67,9 @@
 (defn wrap-reduce
   "Returns a function implementing the Reducer.reduce interface.
 
-  f is a function of two arguments, key and sequence-of-values.
+  f is a function of two arguments.  First argument is the key, second
+  argument is a function, which takes no arguments and returns a lazy
+  sequence of values.
 
   f must return a *sequence* of *pairs* like 
     [[key1 value1] [key2 value2] ...]
@@ -75,10 +77,10 @@
   When f is called, *reporter* is bound to the Hadoop Reporter.
 
   reader is a function that receives the Writable key and value from
-  Hadoop and returns a [key seq-of-values] pair for f.
+  Hadoop and returns a [key values-function] pair for f.
 
   writer is a function that receives each [key value] pair returned by
-  f and sends the appropriately-type arguments to the Hadoop
+  f and sends the appropriately-typed arguments to the Hadoop
   OutputCollector.
 
   If not given, reader and writer default to clojure-reduce-reader and
