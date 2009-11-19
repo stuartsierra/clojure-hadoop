@@ -9,7 +9,7 @@
     (cond (var? v) (let [m (meta v)]
                      (str (ns-name (:ns m)) \/
                           (name (:name m))))
-          (class? v) (.getName v))
+          (class? v) (.getName #^Class v))
     (throw (Exception. (str "Symbol not found: " s)))))
 
 (defmacro defjob

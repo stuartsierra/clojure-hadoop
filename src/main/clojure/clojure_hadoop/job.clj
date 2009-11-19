@@ -3,7 +3,8 @@
             [clojure-hadoop.imports :as imp]
             [clojure-hadoop.wrap :as wrap]
             [clojure-hadoop.config :as config]
-            [clojure-hadoop.load :as load]))
+            [clojure-hadoop.load :as load])
+  (:import (org.apache.hadoop.util Tool)))
 
 (imp/import-io)
 (imp/import-io-compress)
@@ -13,7 +14,7 @@
 (gen/gen-job-classes)
 (gen/gen-main-method)
 
-(def *jobconf* nil)
+(def #^JobConf *jobconf* nil)
 
 (def #^{:private true} method-fn-name
      {"map" "mapper-map"
@@ -31,7 +32,7 @@
   "Preps the mapper or reducer with a Clojure function read from the
   job configuration.  Called from Mapper.configure and
   Reducer.configure."
-  [type jobconf]
+  [type #^JobConf jobconf]
   (alter-var-root (var *jobconf*) (fn [_] jobconf))
   (let [function (load/load-name (.get jobconf (str "clojure-hadoop.job." type)))
         reader (if-let [v (.get jobconf (str "clojure-hadoop.job." type ".reader"))]
@@ -55,13 +56,13 @@
      (config/print-usage)
      (System/exit 1))))
 
-(defn- handle-replace-option [jobconf]
+(defn- handle-replace-option [#^JobConf jobconf]
   (when (= "true" (.get jobconf "clojure-hadoop.job.replace"))
     (let [fs (FileSystem/get jobconf)
           output (FileOutputFormat/getOutputPath jobconf)]
       (.delete fs output true))))
 
-(defn- set-default-config [jobconf]
+(defn- set-default-config [#^JobConf jobconf]
   (doto jobconf
     (.setJobName "clojure_hadoop.job")
     (.setOutputKeyClass Text)
@@ -100,7 +101,7 @@
 
 ;;; TOOL METHODS
 
-(defn tool-run [this args]
+(defn tool-run [#^Tool this args]
   (doto (JobConf. (.getConf this) (.getClass this))
     (set-default-config)
     (parse-command-line args)

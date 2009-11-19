@@ -7,9 +7,9 @@
 (imp/import-mapred)
 (imp/import-mapred-lib)
 
-(defn- as-str [s]
+(defn- #^String as-str [s]
   (cond (keyword? s) (name s)
-        (class? s) (.getName s)
+        (class? s) (.getName #^Class s)
         (fn? s) (throw (Exception. "Cannot use function as value; use a symbol."))
         :else (str s)))
 
@@ -20,17 +20,17 @@
     (doseq [[k v] (f)]
       (conf jobconf k v))))
 
-(defmethod conf :input [jobconf key value]
+(defmethod conf :input [#^JobConf jobconf key value]
   (FileInputFormat/setInputPaths jobconf (as-str value)))
 
-(defmethod conf :output [jobconf key value]
+(defmethod conf :output [#^JobConf jobconf key value]
   (FileOutputFormat/setOutputPath jobconf (Path. (as-str value))))
 
-(defmethod conf :replace [jobconf key value]
+(defmethod conf :replace [#^JobConf jobconf key value]
   (when (= (as-str value) "true")
     (.set jobconf "clojure-hadoop.job.replace" "true")))
 
-(defmethod conf :map [jobconf key value]
+(defmethod conf :map [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
       (= "identity" value)
@@ -42,7 +42,7 @@
       :else
       (.setMapperClass jobconf (Class/forName value)))))
 
-(defmethod conf :reduce [jobconf key value]
+(defmethod conf :reduce [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
       (= "identity" value)
@@ -57,19 +57,19 @@
       :else
       (.setReducerClass jobconf (Class/forName value)))))
 
-(defmethod conf :map-reader [jobconf key value]
+(defmethod conf :map-reader [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.map.reader" (as-str value)))
 
-(defmethod conf :map-writer [jobconf key value]
+(defmethod conf :map-writer [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.map.writer" (as-str value)))
 
-(defmethod conf :reduce-reader [jobconf key value]
+(defmethod conf :reduce-reader [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.reduce.reader" (as-str value)))
 
-(defmethod conf :reduce-writer [jobconf key value]
+(defmethod conf :reduce-writer [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.reduce.writer" (as-str value)))
 
-(defmethod conf :inputformat [jobconf key value]
+(defmethod conf :inputformat [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
       (= "text" value)
@@ -84,7 +84,7 @@
       :else
       (.setInputFormat jobconf (Class/forName value)))))
 
-(defmethod conf :outputformat [jobconf key value]
+(defmethod conf :outputformat [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
       (= "text" value)
@@ -96,7 +96,7 @@
       :else
       (.setOutputFormat jobconf (Class/forName value)))))
 
-(defn parse-command-line-args [jobconf args]
+(defn parse-command-line-args [#^JobConf jobconf args]
   (when (empty? args)
     (throw (Exception. "Required options are -input, -output, -map, -reduce.")))
   (when-not (even? (count args))

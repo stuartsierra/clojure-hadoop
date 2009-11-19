@@ -4,7 +4,7 @@
   "Loads and returns the value of a namespace-qualified string naming
   a symbol.  If the namespace is not currently loaded it will be
   require'd."
-  [s]
+  [#^String s]
   (let [[ns-name fn-name] (.split s "/")]
     (when-not (find-ns (symbol ns-name))
       (require (symbol ns-name)))

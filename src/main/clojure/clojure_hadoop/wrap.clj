@@ -11,29 +11,29 @@
 (defn string-map-reader
   "Returns a [key value] pair by calling .toString on the Writable key
   and value."
-  [wkey wvalue]
+  [#^Writable wkey #^Writable wvalue]
   [(.toString wkey) (.toString wvalue)])
 
-(defn int-string-map-reader [wkey wvalue]
+(defn int-string-map-reader [#^IntWritable wkey #^Writable wvalue]
   [(.get wkey) (.toString wvalue)])
 
 (defn clojure-map-reader
   "Returns a [key value] pair by calling read-string on the string
   representations of the Writable key and value."
-  [wkey wvalue]
+  [#^Writable wkey #^Writable wvalue]
   [(read-string (.toString wkey)) (read-string (.toString wvalue))])
 
 (defn clojure-reduce-reader
   "Returns a [key seq-of-values] pair by calling read-string on the
   string representations of the Writable key and values."
-  [wkey wvalues]
+  [#^Writable wkey #^Writable wvalues]
   [(read-string (.toString wkey))
    (fn [] (map #(read-string (.toString %)) (iterator-seq wvalues)))])
 
 (defn clojure-writer
   "Sends key and value to the OutputCollector by calling pr-str on key
   and value and wrapping them in Hadoop Text objects."
-  [output key value]
+  [#^OutputCollector output key value]
   (binding [*print-dup* true]
     (.collect output (Text. (pr-str key)) (Text. (pr-str value)))))
 

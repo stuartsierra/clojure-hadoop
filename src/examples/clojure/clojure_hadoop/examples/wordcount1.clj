@@ -24,7 +24,8 @@
 (ns clojure-hadoop.examples.wordcount1
   (:require [clojure-hadoop.gen :as gen]
             [clojure-hadoop.imports :as imp])
-  (:import (java.util StringTokenizer)))
+  (:import (java.util StringTokenizer)
+           (org.apache.hadoop.util Tool)))
 
 (imp/import-io)     ;; for Text, IntWritable
 (imp/import-fs)     ;; for Path
@@ -39,7 +40,7 @@
   we have to convert them to strings or some other type before we can
   use them.  Likewise, we have to call the OutputCollector.collect
   method with objects that are sub-classes of Writable."
-  [this key value output reporter]
+  [this key value #^OutputCollector output reporter]
   (doseq [word (enumeration-seq (StringTokenizer. (str value)))]
     (.collect output (Text. word) (IntWritable. 1))))
 
@@ -55,8 +56,8 @@
   method) immediately, before accepting the next value from the
   iterator.  That is, you cannot hang on to past values from the
   iterator."
-  [this key values output reporter]
-  (let [sum (reduce + (map #(.get %) (iterator-seq values)))]
+  [this key values #^OutputCollector output reporter]
+  (let [sum (reduce + (map (fn [#^IntWritable v] (.get v)) (iterator-seq values)))]
     (.collect output key (IntWritable. sum))))
 
 (defn tool-run
@@ -67,7 +68,7 @@
 
   This method must return zero on success or Hadoop will report that
   the job failed."
-  [this args]
+  [#^Tool this args]
   (doto (JobConf. (.getConf this) (.getClass this))
     (.setJobName "wordcount1")
     (.setOutputKeyClass Text)
