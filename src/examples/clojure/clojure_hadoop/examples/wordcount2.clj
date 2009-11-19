@@ -11,7 +11,7 @@
 ;; reducer as a simple, pure-Clojure function.  Converting between
 ;; Hadoop types, and dealing with the Hadoop APIs, are handled by the
 ;; wrapper.  We give it a function that returns a sequence of pairs,
-;; and a pre-defined reader that accepts a Hadoop [IntWritable, Text]
+;; and a pre-defined reader that accepts a Hadoop [LongWritable, Text]
 ;; pair.  The default writer function writes keys and values as Hadoop
 ;; Text objects rendered with pr-str.
 ;;

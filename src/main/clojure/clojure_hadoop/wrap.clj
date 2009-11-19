@@ -14,7 +14,7 @@
   [#^Writable wkey #^Writable wvalue]
   [(.toString wkey) (.toString wvalue)])
 
-(defn int-string-map-reader [#^IntWritable wkey #^Writable wvalue]
+(defn int-string-map-reader [#^LongWritable wkey #^Writable wvalue]
   [(.get wkey) (.toString wvalue)])
 
 (defn clojure-map-reader

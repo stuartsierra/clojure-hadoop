@@ -27,7 +27,7 @@
   (:import (java.util StringTokenizer)
            (org.apache.hadoop.util Tool)))
 
-(imp/import-io)     ;; for Text, IntWritable
+(imp/import-io)     ;; for Text, LongWritable
 (imp/import-fs)     ;; for Path
 (imp/import-mapred) ;; for JobConf, JobClient
 
@@ -42,7 +42,7 @@
   method with objects that are sub-classes of Writable."
   [this key value #^OutputCollector output reporter]
   (doseq [word (enumeration-seq (StringTokenizer. (str value)))]
-    (.collect output (Text. word) (IntWritable. 1))))
+    (.collect output (Text. word) (LongWritable. 1))))
 
 (defn reducer-reduce 
   "This is our implementation of the Reducer.reduce method.  The key
@@ -57,8 +57,8 @@
   iterator.  That is, you cannot hang on to past values from the
   iterator."
   [this key values #^OutputCollector output reporter]
-  (let [sum (reduce + (map (fn [#^IntWritable v] (.get v)) (iterator-seq values)))]
-    (.collect output key (IntWritable. sum))))
+  (let [sum (reduce + (map (fn [#^LongWritable v] (.get v)) (iterator-seq values)))]
+    (.collect output key (LongWritable. sum))))
 
 (defn tool-run
   "This is our implementation of the Tool.run method.  args are the
@@ -72,7 +72,7 @@
   (doto (JobConf. (.getConf this) (.getClass this))
     (.setJobName "wordcount1")
     (.setOutputKeyClass Text)
-    (.setOutputValueClass IntWritable)
+    (.setOutputValueClass LongWritable)
     (.setMapperClass (Class/forName "clojure_hadoop.examples.wordcount1_mapper"))
     (.setReducerClass (Class/forName "clojure_hadoop.examples.wordcount1_reducer"))
     (.setInputFormat TextInputFormat)
