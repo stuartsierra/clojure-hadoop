@@ -39,15 +39,17 @@ Then run:
     mvn assembly:assembly
 
 This builds alternate JAR files, with dependencies included, for
-running the examples.  You can find these files in the "target"
-directory:
+running the examples.  
 
-    clojure-hadoop-1.0-SNAPSHOT-examples.jar
+You can find these files in the "target" directory (replace ${VERSION}
+with the current version number of this library):
+
+    clojure-hadoop-${VERSION}-examples.jar
         This JAR contains all dependencies, including all of Hadoop
         0.18.3.  You can use this JAR to run the examples MapReduce
         jobs from the command line.
 
-    clojure-hadoop-1.0-SNAPSHOT-job.jar
+    clojure-hadoop-${VERSION}-job.jar
         This JAR contains only this library and Clojure 1.0.  It is
         suitable for inclusion in the "lib" directory of a JAR file
         submitted as a Hadoop job.
@@ -58,7 +60,7 @@ RUNNING THE EXAMPLES
 
 After running "mvn assembly:assembly", copy the file from
 
-    target/clojure-hadoop-1.0-SNAPSHOT-examples.jar
+    target/clojure-hadoop-${VERSION}-examples.jar
 
 to something short, like "examples.jar".  Each of the *.clj files in
 the src/examples directory contains instructions for running that
@@ -69,7 +71,7 @@ example.
 USING THE LIBRARY IN HADOOP
 
 Run "mvn assembly:assembly" in this project, then include the
-"clojure-hadoop-1.0-SNAPSHOT-job.jar" file in the lib/ directory of
+"clojure-hadoop-${VERSION}-job.jar" file in the lib/ directory of
 the JAR you submit as your Hadoop job.
 
 
@@ -85,7 +87,7 @@ the following lines to your pom.xml:
       <dependency>
         <groupId>com.stuartsierra</groupId>
         <artifactId>clojure-hadoop</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${VERSION}</version>
       </dependency>
 
       ...
