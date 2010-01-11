@@ -92,6 +92,24 @@ the following lines to your pom.xml:
 
       ...
     </dependencies>
+    ...
+    <repositories>
+      ...
+      <!-- For released versions: -->
+      <repository>
+        <id>stuartsierra-releases</id>
+        <name>Stuart Sierra's personal Maven 2 release repository</name>
+        <url>http://stuartsierra.com/maven2</url>
+      </repository>
+
+      <!-- For SNAPSHOT versions: -->
+      <repository>
+        <id>stuartsierra-snapshots</id>
+        <name>Stuart Sierra's personal Maven 2 SNAPSHOT repository</name>
+        <url>http://stuartsierra.com/m2snapshots</url>
+      </repository>
+      ...
+    </repositories>
 
 
 
