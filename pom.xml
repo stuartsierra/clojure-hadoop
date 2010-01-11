@@ -82,7 +82,7 @@
   <repositories>
     <repository>
       <id>stuartsierra-releases</id>
-      <name>Stuart Sierra's personal Maven 2 repository</name>
+      <name>Stuart Sierra's personal Maven 2 release repository</name>
       <url>http://stuartsierra.com/maven2</url>
       <!-- hadoop-core-with-dependencies 0.18.3 is deployed here. -->
     </repository>
