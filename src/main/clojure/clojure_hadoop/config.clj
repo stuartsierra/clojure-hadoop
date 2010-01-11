@@ -1,6 +1,8 @@
 (ns clojure-hadoop.config
   (:require [clojure-hadoop.imports :as imp]
-            [clojure-hadoop.load :as load]))
+            [clojure-hadoop.load :as load])
+  (:import (org.apache.hadoop.io.compress
+            DefaultCodec GzipCodec LzoCodec)))
 
 ;; This file defines configuration options for clojure-hadoop.  
 ;;
@@ -150,6 +152,33 @@
       :else
       (.setOutputFormat jobconf (Class/forName value)))))
 
+;; If true, compress job output files.
+(defmethod conf :compress-output [#^JobConf jobconf key value]
+  (cond
+   (= "true" (as-str value))
+   (FileOutputFormat/setCompressOutput jobconf true)
+
+   (= "false" (as-str value))
+   (FileOutputFormat/setCompressOutput jobconf false)
+
+   :else
+   (throw (Exception. "compress-output value must be true or false"))))
+
+;; Codec to use for compressing job output files.
+(defmethod conf :output-compressor [#^JobConf jobconf key value]
+  (cond
+   (= "default" (as-str value))
+   (FileOutputFormat/setOutputCompressorClass jobconf DefaultCodec)
+
+   (= "gzip" (as-str value))
+   (FileOutputFormat/setOutputCompressorClass jobconf GzipCodec)
+
+   (= "lzo" (as-str value))
+   (FileOutputFormat/setOutputCompressorClass jobconf LzoCodec)
+
+   :else
+   (FileOutputFormat/setOutputCompressorClass jobconf (Class/forName value))))
+
 (defn parse-command-line-args [#^JobConf jobconf args]
   (when (empty? args)
     (throw (Exception. "Missing required options.")))
@@ -172,17 +201,19 @@ Mapper or reducer function may also be \"identity\".
 Reducer function may also be \"none\".
 
 Other available options are:
- -input-format     Class name or \"text\" or \"seq\" (SeqFile)
- -output-format    Class name or \"text\" or \"seq\" (SeqFile)
- -output-key       Class for job output key
- -output-value     Class for job output value
- -map-output-key   Class for intermediate Mapper output key
- -map-output-value Class for intermediate Mapper output value
- -map-reader       Mapper reader function, as namespace/name
- -map-writer       Mapper writer function, as namespace/name
- -reduce-reader    Reducer reader function, as namespace/name
- -reduce-writer    Reducer writer function, as namespace/name
- -name             Job name
- -replace          If \"true\", deletes output dir before start
+ -input-format      Class name or \"text\" or \"seq\" (SeqFile)
+ -output-format     Class name or \"text\" or \"seq\" (SeqFile)
+ -output-key        Class for job output key
+ -output-value      Class for job output value
+ -map-output-key    Class for intermediate Mapper output key
+ -map-output-value  Class for intermediate Mapper output value
+ -map-reader        Mapper reader function, as namespace/name
+ -map-writer        Mapper writer function, as namespace/name
+ -reduce-reader     Reducer reader function, as namespace/name
+ -reduce-writer     Reducer writer function, as namespace/name
+ -name              Job name
+ -replace           If \"true\", deletes output dir before start
+ -compress-output   If \"true\", compress job output files
+ -output-compressor Compression class or \"gzip\",\"lzo\",\"default\"
 "))
 
