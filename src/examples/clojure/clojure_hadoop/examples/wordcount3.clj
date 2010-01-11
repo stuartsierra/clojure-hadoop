@@ -17,7 +17,7 @@
 ;;        -map clojure-hadoop.examples.wordcount3/my-map \
 ;;        -map-reader clojure-hadoop.wrap/int-string-map-reader \
 ;;        -reduce clojure-hadoop.examples.wordcount3/my-reduce \
-;;        -inputformat text
+;;        -input-format text
 ;;
 ;; The output is a Hadoop SequenceFile.  You can view the output
 ;; with (all one line):
@@ -39,7 +39,7 @@
 ;; symbol.
 ;;
 ;; We also have to specify the input and output paths, and specify the
-;; non-default inputformat as 'text', because README.txt is a text
+;; non-default input-format as 'text', because README.txt is a text
 ;; file.
 ;;
 ;; Run clojure_hadoop.job without any arguments for a brief summary of
