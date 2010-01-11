@@ -9,6 +9,9 @@ For more information
 on Clojure, http://clojure.org/
 on Hadoop, http://hadoop.apache.org/
 
+Also see my presentation about this library at
+http://vimeo.com/7669741
+
 Copyright (c) Stuart Sierra, 2009. All rights reserved.  The use and
 distribution terms for this software are covered by the Eclipse Public
 License 1.0 (http://opensource.org/licenses/eclipse-1.0.php) which can
