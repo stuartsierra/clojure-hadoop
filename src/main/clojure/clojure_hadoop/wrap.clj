@@ -26,9 +26,10 @@
 (defn clojure-reduce-reader
   "Returns a [key seq-of-values] pair by calling read-string on the
   string representations of the Writable key and values."
-  [#^Writable wkey #^Writable wvalues]
+  [#^Writable wkey wvalues]
   [(read-string (.toString wkey))
-   (fn [] (map #(read-string (.toString %)) (iterator-seq wvalues)))])
+   (fn [] (map (fn [#^Writable v] (read-string (.toString v)))
+               (iterator-seq wvalues)))])
 
 (defn clojure-writer
   "Sends key and value to the OutputCollector by calling pr-str on key
