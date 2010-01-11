@@ -4,9 +4,25 @@
   <groupId>com.stuartsierra</groupId>
   <artifactId>clojure-hadoop</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>clojure-hadoop</name>
   <url>http://github.com/stuartsierra/clojure-hadoop</url>
+  <developers>
+    <developer>
+      <id>stuartsierra</id>
+      <name>Stuart Sierra</name>
+      <email>mail@stuartsierra.com</email>
+      <url>http://www.stuartsierra.com/</url>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>Eclipse Public License 1.0</name>
+      <url>http://opensource.org/licenses/eclipse-1.0.php</url>
+      <distribution>repo</distribution>
+      <comments>Same license as Clojure</comments>
+    </license>
+  </licenses>
   <dependencies>
     <dependency>
       <groupId>org.clojure</groupId>
@@ -65,10 +81,22 @@
   </build>
   <repositories>
     <repository>
-      <id>stuartsierra</id>
+      <id>stuartsierra-releases</id>
       <name>Stuart Sierra's personal Maven 2 repository</name>
       <url>http://stuartsierra.com/maven2</url>
       <!-- hadoop-core-with-dependencies 0.18.3 is deployed here. -->
     </repository>
   </repositories>
+  <distributionManagement>
+    <repository>
+      <id>stuartsierra-releases</id>
+      <name>Stuart Sierra's personal Maven 2 release repository</name>
+      <url>ftp://stuartsierra.com/public_html/stuartsierra/maven2</url>
+    </repository>
+    <repository>
+      <id>stuartsierra-snapshots</id>
+      <name>Stuart Sierra's personal Maven 2 SNAPSHOT repository</name>
+      <url>ftp://stuartsierra.com/public_html/stuartsierra/m2snapshots</url>
+    </repository>
+  </distributionManagement>
 </project>
