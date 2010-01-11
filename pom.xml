@@ -93,10 +93,10 @@
       <name>Stuart Sierra's personal Maven 2 release repository</name>
       <url>ftp://stuartsierra.com/public_html/stuartsierra/maven2</url>
     </repository>
-    <repository>
+    <snapshotRepository>
       <id>stuartsierra-snapshots</id>
       <name>Stuart Sierra's personal Maven 2 SNAPSHOT repository</name>
       <url>ftp://stuartsierra.com/public_html/stuartsierra/m2snapshots</url>
-    </repository>
+    </snapshotRepository>
   </distributionManagement>
 </project>
