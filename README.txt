@@ -21,38 +21,47 @@ other, from this software.
 
 DEPENDENCIES
 
-This library requires:
-1. Java 6 JDK, http://java.sun.com/
-2. Apache Maven 2, http://maven.apache.org/
+This library requires Java 6 JDK, http://java.sun.com/
+
+Building from source requires Apache Maven 2, http://maven.apache.org/
 
 
 
-INSTALLING
+BUILDING
 
-In the top-level directory of this project, run:
+If you downloaded the library distribution as a .zip or .tar file,
+everything is pre-built and there is nothing you need to do.
 
-    mvn install
-
-This installs the clojure-hadoop JAR in your local Maven 2 repository.
-Then run:
+If you downloaded the sources from Git, then you need to run the build
+with Maven. In the top-level directory of this project, run:
 
     mvn assembly:assembly
 
-This builds alternate JAR files, with dependencies included, for
-running the examples.  
+This compiles and builds the JAR files.
 
 You can find these files in the "target" directory (replace ${VERSION}
 with the current version number of this library):
 
-    clojure-hadoop-${VERSION}-examples.jar
-        This JAR contains all dependencies, including all of Hadoop
-        0.18.3.  You can use this JAR to run the examples MapReduce
-        jobs from the command line.
+    clojure-hadoop-${VERSION}-examples.jar :
 
-    clojure-hadoop-${VERSION}-job.jar
-        This JAR contains only this library and Clojure 1.0.  It is
-        suitable for inclusion in the "lib" directory of a JAR file
-        submitted as a Hadoop job.
+        This JAR contains all dependencies, including all of Hadoop
+        0.18.3.  You can use this JAR to run the example MapReduce
+        jobs from the command line.  This file is ONLY for running the
+        examples.
+
+
+    clojure-hadoop-${VERSION}-job.jar :
+
+        This JAR contains the clojure-hadoop libraries and Clojure
+        1.0.  It is suitable for inclusion in the "lib" directory of a
+        JAR file submitted as a Hadoop job.
+
+
+    clojure-hadoop-${VERSION}.jar :
+
+        This JAR contains ONLY the clojure-hadoop libraries.  It can
+        be placed in the "lib" directory of a JAR file submitted as a
+        Hadoop job; that JAR must also include the Clojure 1.0 JAR.
 
 
 
