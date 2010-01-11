@@ -2,6 +2,21 @@
   (:require [clojure-hadoop.imports :as imp]
             [clojure-hadoop.load :as load]))
 
+;; This file defines configuration options for clojure-hadoop.  
+;;
+;; The SAME options may be given either on the command line (to
+;; clojure_hadoop.job) or in a call to defjob.
+;;
+;; In defjob, option names are keywords.  Values are symbols or
+;; keywords.  Symbols are resolved as functions or classes.  Keywords
+;; are converted to Strings.
+;;
+;; On the command line, option names are preceeded by "-".
+;;
+;; Options are defined as methods of the conf multimethod.
+;; Documentation for individual options appears with each method,
+;; below.
+
 (imp/import-io)
 (imp/import-fs)
 (imp/import-mapred)
@@ -20,16 +35,21 @@
     (doseq [[k v] (f)]
       (conf jobconf k v))))
 
+;; Job input paths, separated by commas, as a String.
 (defmethod conf :input [#^JobConf jobconf key value]
   (FileInputFormat/setInputPaths jobconf (as-str value)))
 
+;; Job output path, as a String.
 (defmethod conf :output [#^JobConf jobconf key value]
   (FileOutputFormat/setOutputPath jobconf (Path. (as-str value))))
 
+;; When true or "true", deletes output path before starting.
 (defmethod conf :replace [#^JobConf jobconf key value]
   (when (= (as-str value) "true")
     (.set jobconf "clojure-hadoop.job.replace" "true")))
 
+;; The mapper function.  May be a class name or a Clojure function as
+;; namespace/symbol.  May also be "identity" for IdentityMapper.
 (defmethod conf :map [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
@@ -42,6 +62,9 @@
       :else
       (.setMapperClass jobconf (Class/forName value)))))
 
+;; The reducer function.  May be a class name or a Clojure function as
+;; namespace/symbol.  May also be "identity" for IdentityReducer or
+;; "none" for no reduce stage.
 (defmethod conf :reduce [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
@@ -57,19 +80,40 @@
       :else
       (.setReducerClass jobconf (Class/forName value)))))
 
+;; The mapper reader function, converts Hadoop Writable types to
+;; native Clojure types.
 (defmethod conf :map-reader [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.map.reader" (as-str value)))
 
+;; The mapper writer function; converts native Clojure types to Hadoop
+;; Writable types.
 (defmethod conf :map-writer [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.map.writer" (as-str value)))
 
+;; The mapper output key class; used when the mapper writer outputs
+;; types different from the job output.
+(defmethod conf :map-output-key [#^JobConf jobconf key value]
+  (.setMapOutputKeyClass jobconf (Class/forName value)))
+
+;; The mapper output value class; used when the mapper writer outputs
+;; types different from the job output.
+(defmethod conf :map-output-value [#^JobConf jobconf key value]
+  (.setMapOutputValueClass jobconf (Class/forName value)))
+
+;; The reducer reader function, converts Hadoop Writable types to
+;; native Clojure types.
 (defmethod conf :reduce-reader [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.reduce.reader" (as-str value)))
 
+;; The reducer writer function; converts native Clojure types to
+;; Hadoop Writable types.
 (defmethod conf :reduce-writer [#^JobConf jobconf key value]
   (.set jobconf "clojure-hadoop.job.reduce.writer" (as-str value)))
 
-(defmethod conf :inputformat [#^JobConf jobconf key value]
+;; The input file format.  May be a class name or "text" for
+;; TextInputFormat, "kvtext" fro KeyValueTextInputFormat, "seq" for
+;; SequenceFileInputFormat.
+(defmethod conf :input-format [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
       (= "text" value)
@@ -84,7 +128,9 @@
       :else
       (.setInputFormat jobconf (Class/forName value)))))
 
-(defmethod conf :outputformat [#^JobConf jobconf key value]
+;; The output file format.  May be a class name or "text" for
+;; TextOutputFormat, "seq" for SequenceFileOutputFormat.
+(defmethod conf :output-format [#^JobConf jobconf key value]
   (let [value (as-str value)]
     (cond
       (= "text" value)
@@ -98,7 +144,7 @@
 
 (defn parse-command-line-args [#^JobConf jobconf args]
   (when (empty? args)
-    (throw (Exception. "Required options are -input, -output, -map, -reduce.")))
+    (throw (Exception. "Missing required options.")))
   (when-not (even? (count args))
     (throw (Exception. "Number of options must be even.")))
   (doseq [[k v] (partition 2 args)]
@@ -118,11 +164,17 @@ Mapper or reducer function may also be \"identity\".
 Reducer function may also be \"none\".
 
 Other available options are:
- -map-reader    Mapper reader function, as namespace/name
- -map-writer    Mapper writer function, as namespace/name
- -reduce-reader Reducer reader function, as namespace/name
- -reduce-writer Reducer writer function, as namespace/name
- -name          job name
- -replace       if \"true\", deletes output dir before start
+ -input-format     Class name or \"text\" or \"seq\" (SeqFile)
+ -output-format    Class name or \"text\" or \"seq\" (SeqFile)
+ -output-key       Class for job output key
+ -output-value     Class for job output value
+ -map-output-key   Class for intermediate Mapper output key
+ -map-output-value Class for intermediate Mapper output value
+ -map-reader       Mapper reader function, as namespace/name
+ -map-writer       Mapper writer function, as namespace/name
+ -reduce-reader    Reducer reader function, as namespace/name
+ -reduce-writer    Reducer writer function, as namespace/name
+ -name             Job name
+ -replace          If \"true\", deletes output dir before start
 "))
 
