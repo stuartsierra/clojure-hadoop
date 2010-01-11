@@ -70,7 +70,7 @@ with the current version number of this library):
 
 RUNNING THE EXAMPLES
 
-After running "mvn assembly:assembly", copy the file from
+After building, copy the file from
 
     target/clojure-hadoop-${VERSION}-examples.jar
 
@@ -82,9 +82,8 @@ example.
 
 USING THE LIBRARY IN HADOOP
 
-Run "mvn assembly:assembly" in this project, then include the
-"clojure-hadoop-${VERSION}-job.jar" file in the lib/ directory of
-the JAR you submit as your Hadoop job.
+After building, include the "clojure-hadoop-${VERSION}-job.jar" file
+in the lib/ directory of the JAR you submit as your Hadoop job.
 
 
 
