@@ -44,5 +44,5 @@
   :map my-map
   :map-reader wrap/int-string-map-reader
   :reduce my-reduce
-  :inputformat :text)
+  :input-format :text)
 
