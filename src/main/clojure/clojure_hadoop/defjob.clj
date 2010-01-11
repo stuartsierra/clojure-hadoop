@@ -17,7 +17,7 @@
   clojure-hadoop.config.
 
   A job function may be given as the -job argument to
-  clojure-hadoop.job to run a job."
+  clojure_hadoop.job to run a job."
   [sym & options]
   (let [args (reduce (fn [m [k v]]
                        (assoc m k
