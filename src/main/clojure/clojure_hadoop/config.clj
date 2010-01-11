@@ -100,6 +100,14 @@
 (defmethod conf :map-output-value [#^JobConf jobconf key value]
   (.setMapOutputValueClass jobconf (Class/forName value)))
 
+;; The job output key class.
+(defmethod conf :output-key [#^JobConf jobconf key value]
+  (.setOutputKeyClass jobconf (Class/forName value)))
+
+;; The job output value class.
+(defmethod conf :output-value [#^JobConf jobconf key value]
+  (.setOutputValueClass jobconf (Class/forName value)))
+
 ;; The reducer reader function, converts Hadoop Writable types to
 ;; native Clojure types.
 (defmethod conf :reduce-reader [#^JobConf jobconf key value]
