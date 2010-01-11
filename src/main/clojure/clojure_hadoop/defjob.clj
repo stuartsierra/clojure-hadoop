@@ -24,6 +24,7 @@
                               (cond (keyword? v) (name v)
                                     (string? v) v
                                     (symbol? v) (full-name v)
+                                    (instance? Boolean v) (str v)
                                     :else (throw (Exception. "defjob arguments must be strings, symbols, or keywords")))))
                      {} (apply hash-map options))]
     `(defn ~sym [] ~args)))
