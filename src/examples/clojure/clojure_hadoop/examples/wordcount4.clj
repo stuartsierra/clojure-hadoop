@@ -1,4 +1,4 @@
-;; wordcount4 -- example precompiled job
+;; wordcount4 -- example defjob
 ;;
 ;; This example wordcount program is similar to wordcount3, but it
 ;; includes a job definition function created with defjob.
@@ -28,7 +28,6 @@
   
 
 (ns clojure-hadoop.examples.wordcount4
-  (:gen-class)
   (:require [clojure-hadoop.wrap :as wrap]
             [clojure-hadoop.defjob :as defjob])
   (:import (java.util StringTokenizer)))
