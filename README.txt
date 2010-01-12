@@ -1,6 +1,6 @@
 clojure-hadoop
 
-An library to assist in writing Hadoop MapReduce jobs in Clojure.
+A library to assist in writing Hadoop MapReduce jobs in Clojure.
 
 by Stuart Sierra
 http://stuartsierra.com/
@@ -141,19 +141,25 @@ Layer 1: clojure-hadoop.imports
 Layer 2: clojure-hadoop.gen
 
     Provides gen-class macros to generate the multiple classes needed
-    for a MapReduce job.  See the file "examples/wordcount1.clj" for a
+    for a MapReduce job.  See the example file "wordcount1.clj" for a
     demonstration of these macros.
 
 Layer 3: clojure-hadoop.wrap
 
     clojure-hadoop.wrap: provides wrapper functions that automatically
     convert between Hadoop Text objects and Clojure data structures.
-    See the file "examples/wordcount2.clj" for a demonstration of
-    these wrappers.
+    See the example file "wordcount2.clj" for a demonstration of these
+    wrappers.
 
 Layer 4: clojure-hadoop.job
 
     Provides a complete implementation of a Hadoop MapReduce job that
     can be dynamically configured to use any Clojure functions in the
-    map and reduce phases.  See the file "examples/wordcount3.clj" for
+    map and reduce phases.  See the example file "wordcount3.clj" for
     a demonstration of this usage.
+
+Layer 5: clojure-hadoop.defjob
+
+    A convenient macro to configure MapReduce jobs with Clojure code.
+    See the example files "wordcount4.clj" and "wordcount5.clj" for
+    demonstrations of this macro.
