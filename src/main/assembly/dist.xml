@@ -16,6 +16,7 @@
         <include>README.*</include>
         <include>LICENSE.*</include>
         <include>NOTICE.*</include>
+        <include>CHANGES.*</include>
         <include>pom.xml</include>
         <include>src/**</include>
         <include>target/*.jar</include>
