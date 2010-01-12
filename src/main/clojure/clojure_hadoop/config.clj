@@ -168,16 +168,35 @@
 (defmethod conf :output-compressor [#^JobConf jobconf key value]
   (cond
    (= "default" (as-str value))
-   (FileOutputFormat/setOutputCompressorClass jobconf DefaultCodec)
+   (FileOutputFormat/setOutputCompressorClass
+    jobconf DefaultCodec)
 
    (= "gzip" (as-str value))
-   (FileOutputFormat/setOutputCompressorClass jobconf GzipCodec)
+   (FileOutputFormat/setOutputCompressorClass
+    jobconf GzipCodec)
 
    (= "lzo" (as-str value))
-   (FileOutputFormat/setOutputCompressorClass jobconf LzoCodec)
+   (FileOutputFormat/setOutputCompressorClass
+    jobconf LzoCodec)
 
    :else
-   (FileOutputFormat/setOutputCompressorClass jobconf (Class/forName value))))
+   (FileOutputFormat/setOutputCompressorClass
+    jobconf (Class/forName value))))
+
+;; Type of compression to use for sequence files.
+(defmethod conf :compression-type [#^JobConf jobconf key value]
+  (cond
+   (= "block" (as-str value))
+   (SequenceFileOutputFormat/setOutputCompressionType 
+    jobconf SequenceFile$CompressionType/BLOCK)
+
+   (= "none" (as-str value))
+   (SequenceFileOutputFormat/setOutputCompressionType 
+    jobconf SequenceFile$CompressionType/NONE)
+
+   (= "record" (as-str value))
+   (SequenceFileOutputFormat/setOutputCompressionType 
+    jobconf SequenceFile$CompressionType/RECORD)))
 
 (defn parse-command-line-args [#^JobConf jobconf args]
   (when (empty? args)
@@ -215,5 +234,6 @@ Other available options are:
  -replace           If \"true\", deletes output dir before start
  -compress-output   If \"true\", compress job output files
  -output-compressor Compression class or \"gzip\",\"lzo\",\"default\"
+ -compression-type  For seqfiles, compress \"block\",\"record\",\"none\"
 "))
 
