@@ -1,0 +1,11 @@
+Changes in Version 1.1.0:
+
+* Additional configuration options for defjob and command line:
+  output-key, output-value, map-output-key, map-output-value,
+  compress-output, output-compressor, compression-type.
+
+* Renamed configuration options inputformat and outputformat to
+  input-format and output-format, respectively.
+
+
+Version 1.0.0: Initial Release
