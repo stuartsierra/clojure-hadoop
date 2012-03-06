@@ -1,3 +1,7 @@
+UP-TO-DATE fork with more recent maintenance is here:
+https://github.com/alexott/clojure-hadoop 
+
+
 clojure-hadoop
 
 A library to assist in writing Hadoop MapReduce jobs in Clojure.
